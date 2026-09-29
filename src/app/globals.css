@@ -138,4 +138,8 @@
   html {
     @apply font-sans;
   }
+  ::selection {
+    background-color: var(--primay);
+    color: var(--primary-foreground);
+  }
 }
