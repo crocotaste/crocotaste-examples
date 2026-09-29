@@ -44,6 +44,11 @@ export const FINDING = {
   suggestion: '<p className="text-sm text-destructive">Upload failed</p>',
 };
 
+export const VERDICT_NOTE = {
+  lead: "Violations",
+  rest: " turn the check neutral and drift leaves it green. Neither one blocks a merge.",
+};
+
 // In the order they were opened, so the list reads as a walkthrough.
 export const STEPS: Step[] = [
   {
