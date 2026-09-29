@@ -23,6 +23,7 @@ import {
   FINDING,
   REPO_URL,
   siteUrl,
+  TRY_IT,
   STEPS,
   stepUrl,
   type Outcome,
@@ -225,30 +226,28 @@ function Walkthrough() {
 
 function TryIt() {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-lg font-semibold">
-          Try it on your own repository
-        </CardTitle>
-        <CardDescription>
-          Install the GitHub App, and your first three reviews are free
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="flex flex-wrap gap-2">
+    <section className="rounded-3xl bg-brand-field px-6 py-12 md:px-10">
+      <h2 className="text-4xl font-semibold tracking-tight text-balance text-brand-field-foreground">
+        {TRY_IT.title}
+      </h2>
+      <p className="mt-4 text-lg text-brand-field-foreground/90">
+        {TRY_IT.lede}
+      </p>
+      <div className="mt-8 flex flex-wrap gap-2">
         <Button asChild size="lg">
           <a href={siteUrl("/docs")}>
-            Get started
+            {TRY_IT.primary}
             <ArrowUpRight data-icon="inline-end" />
           </a>
         </Button>
-        <Button asChild size="lg" variant="outline">
+        <Button asChild size="lg" variant="secondary">
           <a href={siteUrl("/pricing")}>
-            See pricing
+            {TRY_IT.secondary}
             <ArrowUpRight data-icon="inline-end" />
           </a>
         </Button>
-      </CardContent>
-    </Card>
+      </div>
+    </section>
   );
 }
 
