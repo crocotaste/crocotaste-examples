@@ -21,6 +21,7 @@ import { Separator } from "@/components/ui/separator";
 import {
   CHECKS,
   FINDING,
+  MID_CTA,
   REPO_URL,
   siteUrl,
   STEPS,
@@ -183,6 +184,33 @@ function Finding() {
   );
 }
 
+function MidCta() {
+  return (
+    <section className="mx-auto max-w-xl rounded-xl bg-brand-field px-6 py-8 text-center">
+      <h2 className="text-lg font-semibold text-brand-field-foreground">
+        {MID_CTA.title}
+      </h2>
+      <p className="mt-2 text-sm text-brand-field-foreground/90">
+        {MID_CTA.lede}
+      </p>
+      <div className="mt-6 flex flex-wrap justify-center gap-2">
+        <Button asChild size="lg">
+          <a href={siteUrl("/docs")}>
+            {MID_CTA.primary}
+            <ArrowUpRight data-icon="inline-end" />
+          </a>
+        </Button>
+        <Button asChild size="lg" variant="secondary">
+          <a href={siteUrl("/pricing")}>
+            {MID_CTA.secondary}
+            <ArrowUpRight data-icon="inline-end" />
+          </a>
+        </Button>
+      </div>
+    </section>
+  );
+}
+
 function Walkthrough() {
   return (
     <Card id="walkthrough" className="scroll-mt-4">
@@ -260,6 +288,7 @@ export default function Home() {
         <Hero />
         <Checks />
         <Finding />
+        <MidCta />
         <Walkthrough />
         <TryIt />
       </main>
