@@ -19,6 +19,13 @@ export function siteUrl(path = "/"): string {
   return `https://www.crocotaste.com${path}?utm_source=crocotaste-examples&utm_medium=page`;
 }
 
+export const MID_CTA = {
+  title: "Want this on your own pull requests?",
+  lede: "Install the GitHub App on one repository and see a review in minutes",
+  primary: "Install the GitHub App",
+  secondary: "See pricing",
+};
+
 export const CHECKS = [
   {
     title: "Your tokens",
