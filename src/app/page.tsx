@@ -21,6 +21,7 @@ import { Separator } from "@/components/ui/separator";
 import {
   CHECKS,
   FINDING,
+  HERO_NOTE,
   REPO_URL,
   siteUrl,
   STEPS,
@@ -118,6 +119,7 @@ function Hero() {
             </a>
           </Button>
         </div>
+        <p className="mt-6 text-sm text-[#ffffff]">{HERO_NOTE}</p>
       </div>
     </section>
   );

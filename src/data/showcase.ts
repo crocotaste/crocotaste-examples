@@ -19,6 +19,9 @@ export function siteUrl(path = "/"): string {
   return `https://www.crocotaste.com${path}?utm_source=crocotaste-examples&utm_medium=page`;
 }
 
+export const HERO_NOTE =
+  "Every comment, check and reply in these pull requests was posted by crocotaste[bot], unedited.";
+
 export const CHECKS = [
   {
     title: "Your tokens",
