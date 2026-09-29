@@ -23,6 +23,7 @@ import {
   FINDING,
   REPO_URL,
   siteUrl,
+  STANDARD_LINK,
   STEPS,
   stepUrl,
   type Outcome,
@@ -247,6 +248,13 @@ function TryIt() {
             <ArrowUpRight data-icon="inline-end" />
           </a>
         </Button>
+        <a
+          href={siteUrl(STANDARD_LINK.path)}
+          className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-border bg-background px-2.5 text-sm font-medium hover:bg-muted"
+        >
+          {STANDARD_LINK.label}
+          <ArrowUpRight data-icon="inline-end" className="size-4" />
+        </a>
       </CardContent>
     </Card>
   );

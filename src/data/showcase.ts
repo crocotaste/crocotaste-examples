@@ -19,6 +19,11 @@ export function siteUrl(path = "/"): string {
   return `https://www.crocotaste.com${path}?utm_source=crocotaste-examples&utm_medium=page`;
 }
 
+export const STANDARD_LINK = {
+  label: "Read the DESIGN.md standard",
+  path: "/design-md",
+};
+
 export const CHECKS = [
   {
     title: "Your tokens",
