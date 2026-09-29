@@ -21,6 +21,7 @@ import { Separator } from "@/components/ui/separator";
 import {
   CHECKS,
   FINDING,
+  VERDICT_NOTE,
   REPO_URL,
   siteUrl,
   STEPS,
@@ -178,6 +179,10 @@ function Finding() {
             </pre>
           </div>
         </div>
+        <p className="mt-4 text-sm text-muted-foreground">
+          <span className="font-medium text-red-600">{VERDICT_NOTE.lead}</span>
+          {VERDICT_NOTE.rest}
+        </p>
       </CardContent>
     </Card>
   );
