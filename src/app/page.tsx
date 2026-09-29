@@ -4,6 +4,7 @@ import {
   CircleCheck,
   CircleX,
   MessageCircle,
+  NotebookPen,
   Settings2,
 } from "lucide-react";
 
@@ -38,6 +39,7 @@ const OUTCOME = {
   drift: { label: "Drift", variant: "warning", Icon: CircleAlert },
   violation: { label: "Violation", variant: "destructive", Icon: CircleX },
   command: { label: "Command", variant: "secondary", Icon: MessageCircle },
+  decision: { label: "Decision", variant: "secondary", Icon: NotebookPen },
 } as const;
 
 function OutcomeBadge({ outcome }: { outcome: Outcome }) {
@@ -127,9 +129,7 @@ function Checks() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-lg font-semibold">
-          What gets checked
-        </CardTitle>
+        <CardTitle>What gets checked</CardTitle>
         <CardDescription>
           Everything is read from this repository, nothing from ours
         </CardDescription>
@@ -150,9 +150,7 @@ function Finding() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-lg font-semibold">
-          How a finding reads
-        </CardTitle>
+        <CardTitle>How a finding reads</CardTitle>
         <CardDescription>
           The value, the token, then the source, on the line that changed
         </CardDescription>
@@ -187,7 +185,7 @@ function Walkthrough() {
   return (
     <Card id="walkthrough" className="scroll-mt-4">
       <CardHeader>
-        <CardTitle className="text-lg font-semibold">The walkthrough</CardTitle>
+        <CardTitle>The walkthrough</CardTitle>
         <CardDescription>
           From install to a green check, one pull request at a time
         </CardDescription>
@@ -227,9 +225,7 @@ function TryIt() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-lg font-semibold">
-          Try it on your own repository
-        </CardTitle>
+        <CardTitle>Try it on your own repository</CardTitle>
         <CardDescription>
           Install the GitHub App, and your first three reviews are free
         </CardDescription>

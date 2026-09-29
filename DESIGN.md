@@ -243,19 +243,19 @@ One family: Outfit, loaded with `subsets: ["latin"]` and applied to `html` throu
 
 Two weights carry hierarchy: `font-semibold` (600) for the h1, card titles and the header wordmark, `font-medium` (500) for buttons, badges, check titles and step titles. Everything else is 400.
 
-| Token | Classes in the code | Used for |
-| :-- | :-- | :-- |
-| `display` | `text-5xl font-semibold tracking-tight` at `md:` | Hero h1 on wide screens |
-| `display-sm` | `text-4xl font-semibold tracking-tight` | Hero h1 below `md` |
-| `lead` | `text-lg` | Hero paragraph |
-| `title` | `text-lg font-semibold` on `CardTitle` | Every card title on the page |
-| `heading-sm` | `font-medium` (`text-base`) | Check tile `h3` |
-| `body-md` | `text-sm` | Card body text (`Card` sets `text-sm`), descriptions, footer |
-| `label-md` | `text-sm font-medium` | `Button`, step titles |
-| `label-sm` | `text-xs font-medium` | `Badge` |
-| `code` | `font-mono text-xs` | Code spans, the finding diff and suggestion |
+| Token        | Classes in the code                              | Used for                                                     |
+| :----------- | :----------------------------------------------- | :----------------------------------------------------------- |
+| `display`    | `text-5xl font-semibold tracking-tight` at `md:` | Hero h1 on wide screens                                      |
+| `display-sm` | `text-4xl font-semibold tracking-tight`          | Hero h1 below `md`                                           |
+| `lead`       | `text-lg`                                        | Hero paragraph                                               |
+| `title`      | `text-lg font-semibold` on `CardTitle`           | Every card title on the page                                 |
+| `heading-sm` | `font-medium` (`text-base`)                      | Check tile `h3`                                              |
+| `body-md`    | `text-sm`                                        | Card body text (`Card` sets `text-sm`), descriptions, footer |
+| `label-md`   | `text-sm font-medium`                            | `Button`, step titles                                        |
+| `label-sm`   | `text-xs font-medium`                            | `Badge`                                                      |
+| `code`       | `font-mono text-xs`                              | Code spans, the finding diff and suggestion                  |
 
-The h1 also carries `text-balance`. `CardTitle` defaults to `text-base font-medium leading-snug`; every card on the page raises it to `text-lg font-semibold` at the call site. There is no separate type-scale token file.
+The h1 also carries `text-balance`. `CardTitle` is `text-lg font-semibold leading-snug` in `card.tsx` itself, so no call site restyles it. There is no separate type-scale token file.
 
 ## Layout
 
@@ -304,13 +304,13 @@ States: hover `bg-primary/80` (default), `bg-muted` (outline, ghost), a `color-m
 
 **Badge** (`badge.tsx`). Variants: `default`, `secondary`, `success`, `warning`, `destructive`, `outline`, `ghost`, `link`. One size, `h-5 px-2 text-xs rounded-4xl`. The page wraps it in `OutcomeBadge` (`page.tsx`), the only mapping from outcome to badge:
 
-| Outcome | Label | Variant | Icon |
-| :-- | :-- | :-- | :-- |
-| `setup` | Setup | `secondary` | `Settings2` |
-| `pass` | Pass | `success` | `CircleCheck` |
-| `drift` | Drift | `warning` | `CircleAlert` |
-| `violation` | Violation | `destructive` | `CircleX` |
-| `command` | Command | `secondary` | `MessageCircle` |
+| Outcome              | Label            | Variant       | Icon                        |
+| :------------------- | :--------------- | :------------ | :-------------------------- |
+| `setup` · `decision` | Setup · Decision | `secondary`   | `Settings2` · `NotebookPen` |
+| `pass`               | Pass             | `success`     | `CircleCheck`               |
+| `drift`              | Drift            | `warning`     | `CircleAlert`               |
+| `violation`          | Violation        | `destructive` | `CircleX`                   |
+| `command`            | Command          | `secondary`   | `MessageCircle`             |
 
 Every status badge has a leading icon (`data-icon="inline-start"`) and a text label, so status never rests on colour alone.
 

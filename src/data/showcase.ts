@@ -1,6 +1,7 @@
 // The page's content, kept out of the markup so the page reads as layout.
 
-export type Outcome = "setup" | "pass" | "drift" | "violation" | "command";
+export type Outcome =
+  "setup" | "pass" | "drift" | "violation" | "command" | "decision";
 
 export type Step = {
   title: string;
@@ -74,13 +75,15 @@ export const STEPS: Step[] = [
   },
   {
     title: "A spacing value just off the scale",
-    shows: "An arbitrary padding a few pixels from a spacing token.",
+    shows:
+      "An arbitrary padding a few pixels from a spacing value in DESIGN.md.",
     outcome: "drift",
     number: 5,
   },
   {
-    title: "A font size outside the type scale",
-    shows: "A one-off text size next to the nearest type token.",
+    title: "A radius off the scale",
+    shows:
+      "An arbitrary corner radius, with the nearest step as a one-click fix.",
     outcome: "drift",
     number: 6,
   },
@@ -92,27 +95,34 @@ export const STEPS: Step[] = [
   },
   {
     title: "A button built from scratch",
-    shows: "Markup that rebuilds components/ui/button.tsx, cited by path.",
+    shows: "A hand-styled link where Button exists, caught by the AI review.",
     outcome: "violation",
     number: 8,
-  },
-  {
-    title: "A change against a recorded decision",
-    shows: "A finding that cites the line in DESIGN.md it breaks.",
-    outcome: "violation",
-    number: 9,
   },
   {
     title: "Dismissing a finding",
     shows: "An @crocotaste ignore reply that drafts the decision to record.",
     outcome: "command",
+    number: 9,
+  },
+  {
+    title: "Recording the decision",
+    shows:
+      "The drafted block merged into DESIGN.md, where every review reads it.",
+    outcome: "decision",
     number: 10,
+  },
+  {
+    title: "Breaking the recorded decision",
+    shows: "A later change goes against it, and the finding cites its line.",
+    outcome: "violation",
+    number: 11,
   },
   {
     title: "A clean pull request",
     shows: "Nothing off-system, so the check goes green and approves.",
     outcome: "pass",
-    number: 11,
+    number: 12,
   },
 ];
 

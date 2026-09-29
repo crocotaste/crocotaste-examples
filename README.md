@@ -27,21 +27,22 @@ Follow the walkthrough below in order, and on each pull request look at four pla
 
 ### The walkthrough
 
-| Step                                         | What to look for                                                                    | Link                                                             |
-| -------------------------------------------- | ----------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| The onboarding issue                         | One issue with instructions for your coding agent to write DESIGN.md                | [#1](https://github.com/crocotaste/crocotaste-examples/issues/1) |
-| Adding DESIGN.md                             | The agent's pull request, and the note on what Crocotaste read once it merged       | [#2](https://github.com/crocotaste/crocotaste-examples/pull/2)   |
-| A Tailwind colour where a theme token exists | `text-red-600` flagged as `--color-destructive`, with the one-click fix             | [#3](https://github.com/crocotaste/crocotaste-examples/pull/3)   |
-| A hex that several roles share               | A white that is `--card`, `--popover` and more, named with all of them and no guess | [#4](https://github.com/crocotaste/crocotaste-examples/pull/4)   |
-| A spacing value just off the scale           | An arbitrary padding a few pixels from a spacing token, reported as drift           | [#5](https://github.com/crocotaste/crocotaste-examples/pull/5)   |
-| A font size outside the type scale           | A one-off text size next to the nearest type token                                  | [#6](https://github.com/crocotaste/crocotaste-examples/pull/6)   |
-| A token that does not exist                  | A misspelled `var()` caught before it renders nothing                               | [#7](https://github.com/crocotaste/crocotaste-examples/pull/7)   |
-| A button built from scratch                  | Markup that rebuilds `Button`, cited by the path of `button.tsx`                    | [#8](https://github.com/crocotaste/crocotaste-examples/pull/8)   |
-| A change against a recorded decision         | A finding that cites the line in DESIGN.md it breaks                                | [#9](https://github.com/crocotaste/crocotaste-examples/pull/9)   |
-| Dismissing a finding                         | An `@crocotaste ignore` reply that drafts the decision to record                    | [#10](https://github.com/crocotaste/crocotaste-examples/pull/10) |
-| A clean pull request                         | A green check and an approval                                                       | [#11](https://github.com/crocotaste/crocotaste-examples/pull/11) |
+| Step                                         | What to look for                                                                                     | Link                                                             |
+| -------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| The onboarding issue                         | One issue with instructions for your coding agent to write DESIGN.md                                 | [#1](https://github.com/crocotaste/crocotaste-examples/issues/1) |
+| Adding DESIGN.md                             | The agent's pull request, and the note on what Crocotaste read once it merged                        | [#2](https://github.com/crocotaste/crocotaste-examples/pull/2)   |
+| A Tailwind colour where a theme token exists | `text-red-600` flagged as `--color-destructive`, with the one-click fix                              | [#3](https://github.com/crocotaste/crocotaste-examples/pull/3)   |
+| A hex that several roles share               | A white that is `--card`, `--popover` and more, named with all of them and no guess                  | [#4](https://github.com/crocotaste/crocotaste-examples/pull/4)   |
+| A spacing value just off the scale           | `p-[18px]` reported as drift against `spacing.card` in DESIGN.md; the check stays green              | [#5](https://github.com/crocotaste/crocotaste-examples/pull/5)   |
+| A radius off the scale                       | `rounded-[12px]` reported as drift, with `rounded-lg` as the one-click fix                           | [#6](https://github.com/crocotaste/crocotaste-examples/pull/6)   |
+| A token that does not exist                  | `var(--primay)` caught in a stylesheet, with `--primary` as the fix                                  | [#7](https://github.com/crocotaste/crocotaste-examples/pull/7)   |
+| A button built from scratch                  | A hand-styled link where `Button` exists, flagged by the AI review with the DESIGN.md rule it breaks | [#8](https://github.com/crocotaste/crocotaste-examples/pull/8)   |
+| Dismissing a finding                         | An `@crocotaste ignore` reply that drafts the decision to record, and the summary's Dismissed row    | [#9](https://github.com/crocotaste/crocotaste-examples/pull/9)   |
+| Recording the decision                       | The drafted block merged into DESIGN.md's `## Decisions`                                             | [#10](https://github.com/crocotaste/crocotaste-examples/pull/10) |
+| Breaking the recorded decision               | A later change goes against it, and the finding cites the decision's line                            | [#11](https://github.com/crocotaste/crocotaste-examples/pull/11) |
+| A clean pull request                         | A green check and an approval: "Nothing to snap at."                                                 | [#12](https://github.com/crocotaste/crocotaste-examples/pull/12) |
 
-DESIGN.md is merged, because every later review reads it. The example pull requests from #3 on stay open, so each review sits beside the code it read and `main` stays on-system.
+DESIGN.md (#2) and the recorded decision (#10) are merged, because every later review reads them. Every other pull request stays open, so each review sits beside the code it read and `main` stays on-system.
 
 ## What a finding looks like
 
