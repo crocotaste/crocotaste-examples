@@ -346,3 +346,7 @@ Every status badge has a leading icon (`data-icon="inline-start"`) and a text la
 ## Decisions
 
 _Team decisions are recorded here as undated entries; each one is a rule, its reason, and its source._
+
+### Brand-field panels are the page's calls to action
+
+Brand-field panels are the page's calls to action: the hero opens the page and the closing banner ends it, full width on bg-brand-field with rounded-3xl. Content sections stay in a Card. Source: DESIGN.md:330.
