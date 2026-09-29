@@ -44,6 +44,9 @@ export const FINDING = {
   suggestion: '<p className="text-sm text-destructive">Upload failed</p>',
 };
 
+export const WALKTHROUGH_LEDE =
+  "From install to a green check, one pull request at a time";
+
 // In the order they were opened, so the list reads as a walkthrough.
 export const STEPS: Step[] = [
   {
