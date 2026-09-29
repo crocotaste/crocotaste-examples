@@ -158,7 +158,7 @@ function Finding() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="overflow-hidden rounded-lg border">
+        <div className="overflow-hidden rounded-[12px] border">
           <div className="border-b bg-muted px-4 py-2 font-mono text-xs text-muted-foreground">
             {FINDING.path}:{FINDING.line}
           </div>
