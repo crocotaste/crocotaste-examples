@@ -136,7 +136,7 @@ function Checks() {
       </CardHeader>
       <CardContent className="grid gap-4 md:grid-cols-3">
         {CHECKS.map((check) => (
-          <div key={check.title} className="rounded-lg bg-muted p-4">
+          <div key={check.title} className="rounded-lg bg-muted p-[18px]">
             <h3 className="font-medium">{check.title}</h3>
             <p className="mt-1 text-sm text-muted-foreground">{check.body}</p>
           </div>
