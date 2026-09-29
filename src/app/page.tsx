@@ -24,6 +24,7 @@ import {
   REPO_URL,
   siteUrl,
   STEPS,
+  WALKTHROUGH_LEDE,
   stepUrl,
   type Outcome,
 } from "@/data/showcase";
@@ -188,9 +189,7 @@ function Walkthrough() {
     <Card id="walkthrough" className="scroll-mt-4">
       <CardHeader>
         <CardTitle className="text-lg font-semibold">The walkthrough</CardTitle>
-        <CardDescription>
-          From install to a green check, one pull request at a time
-        </CardDescription>
+        <CardDescription>{WALKTHROUGH_LEDE}</CardDescription>
       </CardHeader>
       <CardContent>
         <ol>
