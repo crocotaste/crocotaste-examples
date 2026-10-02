@@ -2,10 +2,9 @@
 export function ProdCheck() {
   return (
     <div className="border">
-      <div className="mt-[18px]">One</div>
-      <div className="gap-[18px]">Two</div>
-      <div className="px-[18px]">Three</div>
-      <p className="text-red-600">Four</p>
+      <div className="mt-4">One</div>
+      <div className="flex px-[18px]">Three</div>
+      <p className="text-destructive">Four</p>
       <div className="mb-[18px]">Five</div>
     </div>
   );
