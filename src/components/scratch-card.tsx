@@ -1,3 +1,5 @@
+import { Button } from "@/components/ui/button";
+
 // Scratch component for a live test of fixed-finding marks. Not used anywhere.
 export function ScratchCard() {
   return (
@@ -5,9 +7,9 @@ export function ScratchCard() {
       <p className="text-red-600">One</p>
       <p className="text-amber-600">Two</p>
       <p className="bg-red-500">Three</p>
-      <div className="mt-[18px]">Four</div>
-      <div className="gap-[18px]">Five</div>
-      <div className="px-[18px]">Six</div>
+      <div className="mt-4">Four</div>
+      <div className="gap-4">Five</div>
+      <div className="flex px-[18px]">Six</div>
       <div className="py-[18px]">Seven</div>
       <div className="mb-[18px]">Eight</div>
       <div className="rounded-[14px]">Nine</div>
@@ -16,9 +18,13 @@ export function ScratchCard() {
       <p className="bg-amber-500">Twelve</p>
       <p className="border-red-500">Thirteen</p>
       <div className="ml-[18px]">Fourteen</div>
-      <button className="rounded-md bg-emerald-500 px-4 py-2 text-white">
-        Save
-      </button>
+      <Button>Save</Button>
+      <div className="pt-[18px]">Fifteen</div>
+      <div className="pb-[18px]">Sixteen</div>
+      <div className="pl-[18px]">Seventeen</div>
+      <div className="pr-[18px]">Eighteen</div>
+      <div className="mr-[18px]">Nineteen</div>
+      <div className="mx-[18px]">Twenty</div>
     </div>
   );
 }
