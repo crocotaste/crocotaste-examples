@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 export function ScratchCard() {
   return (
     <div className="rounded-[12px] border p-[18px]">
-      <p className="text-red-600">One</p>
+      <p className="text-destructive">One</p>
       <p className="text-amber-600">Two</p>
       <p className="bg-red-500">Three</p>
       <div className="mt-[18px]">Four</div>
@@ -18,9 +18,8 @@ export function ScratchCard() {
       <p className="border-red-500">Thirteen</p>
       <div className="flex ml-[18px]">Fourteen</div>
       <Button>Save</Button>
-      <div className="pt-[18px]">Fifteen</div>
-      <div className="pb-[18px]">Sixteen</div>
-      <div className="pl-[18px]">Seventeen</div>
+      <div className="pt-4">Fifteen</div>
+      <div className="flex pl-[18px]">Seventeen</div>
       <div className="pr-[18px]">Eighteen</div>
       <div className="mr-[18px]">Nineteen</div>
       <div className="mx-[18px]">Twenty</div>
