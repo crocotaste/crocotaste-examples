@@ -20,9 +20,8 @@ export function ScratchCard() {
       <Button>Save</Button>
       <div className="pt-4">Fifteen</div>
       <div className="flex pl-[18px]">Seventeen</div>
-      <div className="pr-[18px]">Eighteen</div>
-      <div className="mr-[18px]">Nineteen</div>
-      <div className="mx-[18px]">Twenty</div>
+      <div className="pr-4">Eighteen</div>
+      <div className="flex mx-[18px]">Twenty</div>
     </div>
   );
 }
