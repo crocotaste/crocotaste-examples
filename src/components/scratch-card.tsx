@@ -7,17 +7,16 @@ export function ScratchCard() {
       <p className="text-red-600">One</p>
       <p className="text-amber-600">Two</p>
       <p className="bg-red-500">Three</p>
-      <div className="mt-4">Four</div>
+      <div className="mt-[18px]">Four</div>
       <div className="gap-4">Five</div>
       <div className="flex px-[18px]">Six</div>
-      <div className="py-[18px]">Seven</div>
-      <div className="mb-[18px]">Eight</div>
+      <div className="py-4">Seven</div>
       <div className="rounded-[14px]">Nine</div>
       <div className="rounded-[10px]">Ten</div>
       <p className="text-orange-600">Eleven</p>
       <p className="bg-amber-500">Twelve</p>
       <p className="border-red-500">Thirteen</p>
-      <div className="ml-[18px]">Fourteen</div>
+      <div className="flex ml-[18px]">Fourteen</div>
       <Button>Save</Button>
       <div className="pt-[18px]">Fifteen</div>
       <div className="pb-[18px]">Sixteen</div>
