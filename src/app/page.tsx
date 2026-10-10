@@ -24,6 +24,7 @@ import { cn } from "@/lib/utils";
 import {
   CHECKS,
   CHECKS_SECTION,
+  EVIDENCE,
   FIRST_STAGE,
   HERO,
   REPO_URL,
@@ -49,9 +50,9 @@ const OUTCOME = {
 } as const;
 
 const SIGN = {
-  "+": { label: "Added", className: "" },
-  "-": { label: "Removed", className: "opacity-70" },
-  " ": { label: "Unchanged", className: "opacity-70" },
+  "+": { label: EVIDENCE.added, className: "" },
+  "-": { label: EVIDENCE.removed, className: "opacity-70" },
+  " ": { label: EVIDENCE.unchanged, className: "opacity-70" },
 } as const;
 
 function OutcomeBadge({ outcome }: { outcome: Outcome }) {
@@ -141,20 +142,21 @@ function PostView({ post }: { post: Post }) {
     return (
       <div className="space-y-2 p-4">
         <p className="text-xs text-muted-foreground">
-          <span className="font-medium text-foreground">crocotaste</span>{" "}
-          commented on the line
+          <span className="font-medium text-foreground">{EVIDENCE.bot}</span>{" "}
+          {EVIDENCE.onTheLine}
         </p>
         <p className="break-words">
           <OutcomeBadge outcome={post.verdict} />{" "}
           <MessageText text={post.message} />
         </p>
         <p className="text-xs text-muted-foreground">
-          Source: <code className="font-mono break-all">{post.source}</code>
+          {EVIDENCE.source}{" "}
+          <code className="font-mono break-all">{post.source}</code>
         </p>
         {post.suggestion ? (
           <div className="space-y-1">
             <p className="text-xs font-medium text-muted-foreground">
-              Suggested change
+              {EVIDENCE.suggestion}
             </p>
             <CodeBlock text={post.suggestion} />
           </div>
@@ -325,7 +327,7 @@ function Walkthrough() {
       </CardHeader>
       <CardContent>
         <Tabs defaultValue={FIRST_STAGE}>
-          <TabsList aria-label="Walkthrough stages">
+          <TabsList aria-label={WALKTHROUGH.tabsLabel}>
             {STAGES.map((stage) => (
               <TabsTrigger key={stage.id} value={stage.id}>
                 {stage.label}

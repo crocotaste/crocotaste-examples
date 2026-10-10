@@ -86,6 +86,18 @@ export const WALKTHROUGH = {
   description:
     "From install to a green check. Each step quotes what Crocotaste posted, unedited.",
   link: "See it on GitHub",
+  tabsLabel: "Walkthrough stages",
+};
+
+// The labels around each quoted post, in GitHub's own words where it has them.
+export const EVIDENCE = {
+  bot: "crocotaste",
+  onTheLine: "commented on the line",
+  source: "Source:",
+  suggestion: "Suggested change",
+  added: "Added",
+  removed: "Removed",
+  unchanged: "Unchanged",
 };
 
 export const STAGES: { id: StageId; label: string; description: string }[] = [
