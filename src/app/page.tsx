@@ -197,8 +197,8 @@ function Evidence({ step }: { step: Step }) {
   );
 }
 
-// The GitHub link sits under the title on wide screens and after the evidence
-// on narrow ones, where it would otherwise split the title from what it shows.
+// The GitHub link sits under the title from `sm:` and after the evidence
+// below it, where it would otherwise split the title from what it shows.
 function StepLink({ step }: { step: Step }) {
   const kind = step.issue ? "Issue" : "Pull request";
   return (
@@ -214,21 +214,23 @@ function StepLink({ step }: { step: Step }) {
   );
 }
 
+// Stacked on phones, a row from `sm:` (DESIGN.md's walkthrough row): the text
+// takes a third, the evidence the rest.
 function StepItem({ step }: { step: Step }) {
   return (
-    <article className="grid gap-3 py-4 lg:grid-cols-3 lg:gap-6">
-      <div className="flex min-w-0 flex-col items-start gap-2">
+    <article className="flex flex-col gap-2 py-3 sm:flex-row sm:gap-3">
+      <div className="flex min-w-0 flex-col items-start gap-2 sm:w-1/3">
         <OutcomeBadge outcome={step.outcome} />
         <h3 className="font-medium">{step.title}</h3>
         <p className="text-sm text-muted-foreground">{step.shows}</p>
-        <div className="hidden lg:block">
+        <div className="hidden sm:block">
           <StepLink step={step} />
         </div>
       </div>
-      <div className="min-w-0 lg:col-span-2">
+      <div className="min-w-0 sm:flex-1">
         <Evidence step={step} />
       </div>
-      <div className="lg:hidden">
+      <div className="sm:hidden">
         <StepLink step={step} />
       </div>
     </article>
