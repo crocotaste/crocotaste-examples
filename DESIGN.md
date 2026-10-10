@@ -209,7 +209,7 @@ A one-page Next.js App Router site, exported statically and served from GitHub P
 
 - `src/app/globals.css`: every color and radius token. Light values sit in `:root`, dark values in `.dark`, and `@theme inline` maps each `--x` to a Tailwind `--color-x` (so `--primary` becomes `bg-primary`). `--radius-*` is derived from `--radius: 0.625rem`.
 - `src/app/layout.tsx`: the font. Outfit from `next/font/google`, exposed as `--font-sans`; `globals.css` also points `--font-heading` at it.
-- `src/components/ui/`: the five components, `button.tsx`, `badge.tsx`, `card.tsx`, `separator.tsx`, `tabs.tsx`, with their variants in `cva` calls. `src/components/croc-mark.tsx` is the logo mark.
+- `src/components/ui/`: the five components, `button.tsx`, `badge.tsx`, `card.tsx`, `separator.tsx`, `tabs.tsx`; the button and badge variants are `cva` calls. `src/components/croc-mark.tsx` is the logo mark.
 - `CLAUDE.md`: the written UI rules. `components.json` holds the shadcn configuration.
 
 The type sizes, the spacing unit (`--spacing: 0.25rem`), the mono font stack and the container widths are not defined by this repository: they are Tailwind 4's defaults from `node_modules/tailwindcss/theme.css`, recorded here where the page uses them.

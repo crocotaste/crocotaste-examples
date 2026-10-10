@@ -56,10 +56,13 @@ function TabsContent({
   ...props
 }: React.ComponentProps<typeof TabsPrimitive.Content>) {
   return (
+    // Mounted while inactive, so every stage is in the static HTML for
+    // readers and crawlers without JavaScript.
     <TabsPrimitive.Content
       data-slot="tabs-content"
+      forceMount
       className={cn(
-        "rounded-lg text-sm outline-none focus-visible:ring-3 focus-visible:ring-ring/50",
+        "rounded-lg text-sm outline-none focus-visible:ring-3 focus-visible:ring-ring/50 data-[state=inactive]:hidden",
         className,
       )}
       {...props}

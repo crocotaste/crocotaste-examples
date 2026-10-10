@@ -155,7 +155,7 @@ export const STEPS: Step[] = [
         text: "Crocotaste reviews every UI pull request here against your design system: your tokens, your components, your team's decisions. The sharpest reviews come from a DESIGN.md, and the same file is what makes your coding agent write on-system UI in the first place.",
         block: {
           label: "Instructions for your coding agent",
-          text: "You are working in the repository crocotaste/crocotaste-examples. Write a DESIGN.md at the repository root that describes this codebase's design system as it actually is, in the Google Labs DESIGN.md format.\n\nRead the code first, and take every value from it.",
+          text: "You are working in the repository crocotaste/crocotaste-examples. Write a DESIGN.md at the repository root that describes this codebase's design system as it actually is, in the Google Labs DESIGN.md format (https://github.com/google-labs-code/design.md).\n\nRead the code first, and take every value from it:",
         },
       },
     ],

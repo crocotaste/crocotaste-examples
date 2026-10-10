@@ -264,8 +264,8 @@ function Header() {
 // The tally under the actions is counted from STEPS, so it never drifts.
 function Hero() {
   const pullRequests = STEPS.filter((step) => !step.issue).length;
-  const findings = STEPS.filter(
-    (step) => step.outcome === "violation" || step.outcome === "drift",
+  const findings = STEPS.filter((step) =>
+    step.posts.some((post) => post.kind === "finding"),
   ).length;
   return (
     <section className="px-6 pt-12 pb-8 md:px-10 md:pt-20 md:pb-12">
