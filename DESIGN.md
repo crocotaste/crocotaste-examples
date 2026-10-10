@@ -29,8 +29,6 @@ colors:
   success-dark: "oklch(0.773 0.153 163.223)"
   warning: "oklch(0.555 0.146 48.998)"
   warning-dark: "oklch(0.837 0.164 84.429)"
-  brand-field: "oklch(0.322 0.046 168.496)"
-  brand-field-foreground: "oklch(1 0 0)"
   border: "oklch(0.928 0.008 157.082)"
   border-dark: "oklch(1 0 0 / 10%)"
 typography:
@@ -85,7 +83,6 @@ rounded:
   md: 0.5rem
   lg: 0.625rem
   xl: 0.875rem
-  3xl: 1.375rem
   4xl: 1.625rem
 spacing:
   unit: 0.25rem
@@ -202,10 +199,8 @@ components:
     backgroundColor: "{colors.border-dark}"
     height: 1px
   hero:
-    backgroundColor: "{colors.brand-field}"
-    textColor: "{colors.brand-field-foreground}"
+    textColor: "{colors.foreground}"
     typography: "{typography.display}"
-    rounded: "{rounded.3xl}"
 ---
 
 ## Overview
@@ -231,11 +226,10 @@ Colours are `oklch()` values, and every one is reached through a Tailwind utilit
 - **Secondary:** secondary `Button` and the `setup` and `command` `Badge`s.
 - **Muted / muted-foreground:** quiet fills and supporting text: the check tiles (`bg-muted`), code spans, the file-path bar of the finding, `CardDescription`, step descriptions, the footer.
 - **Success, warning, destructive:** status only. They appear on the page solely through the `success`, `warning` and `destructive` `Badge` variants, at `/10` opacity for the fill (`/20` in dark) with the full token as text. `--success` has the same value as `--primary` in both modes.
-- **Brand-field / brand-field-foreground:** the dark green behind the hero art and the white text on it. It is the only role with the same value in light and dark.
 - **Border:** `* { @apply border-border outline-ring/50 }` sets the default border colour for every element, and `Separator` is `bg-border`.
 - **Ring and input** (not in the front matter, because the code reads them only at partial opacity): `--ring` is `oklch(0.528 0.115 161.878)` light and `oklch(0.773 0.153 163.223)` dark, the same values as `--primary`, and every focus ring is `ring-ring/50`. `--input` is `oklch(0.928 0.008 157.082)` light and `oklch(1 0 0 / 15%)` dark; only the dark `outline` `Button` reads it (`dark:border-input dark:bg-input/30`).
 
-**Dark mode.** `@custom-variant dark (&:is(.dark *))` makes `dark:` utilities apply under a `.dark` ancestor, and the `.dark` block in `globals.css` redefines every token above except `brand-field` and `brand-field-foreground`. Nothing in the app adds the `.dark` class, and there is no theme toggle or `prefers-color-scheme` rule, so the page always renders the light values. A component that reads theme tokens needs no extra `dark:` classes to be correct in dark mode; the `dark:` classes in `src/components/ui/` only retune opacities.
+**Dark mode.** `@custom-variant dark (&:is(.dark *))` makes `dark:` utilities apply under a `.dark` ancestor, and the `.dark` block in `globals.css` redefines every token above. Nothing in the app adds the `.dark` class, and there is no theme toggle or `prefers-color-scheme` rule, so the page always renders the light values. A component that reads theme tokens needs no extra `dark:` classes to be correct in dark mode; the `dark:` classes in `src/components/ui/` only retune opacities.
 
 ## Typography
 
@@ -265,7 +259,7 @@ Spacing uses Tailwind's scale on its default `--spacing: 0.25rem`; the repositor
 - **Stack:** `main` separates sections with `space-y-4`. The header and footer use `py-4` and `py-6`.
 - **Card:** padding comes from `--card-spacing`, `--spacing(4)` by default and `--spacing(3)` at `size="sm"`, used as both the vertical padding and the gap between header and content.
 - **Grids and rows:** the check tiles are `grid gap-4 md:grid-cols-3`. Button groups are `flex flex-wrap gap-2`. Walkthrough rows stack (`flex-col gap-2`) and become a row at `sm:` (`sm:flex-row sm:gap-3`), with `Separator` between rows and `py-3` on each.
-- **Hero:** text column `max-w-2xl px-6 py-16 md:px-10`, paragraph `mt-4`, actions `mt-8`.
+- **Hero:** type on the page background, no panel and no image: `px-6 pt-12 pb-8 md:px-10 md:pt-20 md:pb-12`, the h1 at `max-w-3xl` with its last phrase in `text-primary`, the paragraph `mt-4 max-w-2xl text-muted-foreground`, actions `mt-8`, then a `font-mono text-xs` tally counted from `STEPS` at `mt-10`.
 - **Breakpoints:** Tailwind defaults, used at `sm`, `md` and `lg` only.
 
 ## Elevation & Depth
@@ -274,14 +268,12 @@ There are no shadows and no shadow tokens: no `shadow-*` class appears in `src/`
 
 - `Card` separates itself from `bg-background` with `bg-card` and `ring-1 ring-foreground/10`.
 - Nested panels step down a surface instead of up: `bg-muted` tiles inside the card, `rounded-lg border` around the finding.
-- The hero stacks its art under its text with `relative isolate` on the section and `absolute inset-0 -z-10` on the `<img>`.
 
 ## Shapes
 
 Every radius comes from the `rounded-*` scale in `@theme inline`, derived from `--radius: 0.625rem` (`sm` is ×0.6, `md` ×0.8, `lg` ×1, `xl` ×1.4, `2xl` ×1.8, `3xl` ×2.2, `4xl` ×2.6). The front matter lists the steps the page uses, as computed values.
 
 - `rounded-4xl`: `Badge`, a pill.
-- `rounded-3xl`: the hero section.
 - `rounded-xl`: `Card`.
 - `rounded-lg`: `Button` (default and `lg` sizes), check tiles, the finding frame.
 - `rounded-md`: the suggestion `<pre>`; `Button` at `sm` computes to it (`min(var(--radius-md),12px)`).
@@ -295,7 +287,7 @@ Import from `src/components/ui/<name>` by path; there is no barrel file.
 
 **Button** (`button.tsx`). Variants: `default`, `outline`, `secondary`, `ghost`, `destructive`, `link`. Sizes: `xs` (`h-6`), `sm` (`h-7`), `default` (`h-8`), `lg` (`h-9`), and square `icon-xs`, `icon-sm`, `icon`, `icon-lg`. Every link that acts as a button is `<Button asChild><a …></a></Button>`. On the page:
 
-- `lg` + `default` for the main call to action (`Follow the walkthrough`, `Get started`), with `secondary` (on the hero) or `outline` (in a card) beside it.
+- `lg` + `default` for the main call to action (`Follow the walkthrough`, `Get started`), with `outline` beside it (on the hero and in a card).
 - `ghost` for the header's `GitHub` link.
 - `outline` + `sm` for each walkthrough step's `#n` link.
 - An external link carries a trailing `ArrowUpRight` marked `data-icon="inline-end"`, which tightens the right padding.
@@ -333,7 +325,7 @@ Every status badge has a leading icon (`data-icon="inline-start"`) and a text la
 - Do take spacing from Tailwind's scale (`p-4`, `gap-2`, `space-y-4`); don't write `p-[…]`, `gap-[…]` or any arbitrary spacing value.
 - Do separate a surface with `ring-1 ring-foreground/10` or a step to `bg-muted`; don't add `shadow-*`.
 - Do give every interactive element a visible hover and a `focus-visible` ring from `--ring`; the base layer's `outline-ring/50` must stay.
-- Do give every `<img>` an `alt`, empty (`alt=""`) only when the image is decorative, as with the hero art.
+- Do give every `<img>` an `alt`, empty (`alt=""`) only when the image is decorative.
 - Do give a link or button whose text alone is unclear an `aria-label` (the step links read `Pull request #3`, not `#3`); don't ship an icon-only `Button` without one.
 - Do mark decorative SVGs `aria-hidden`, as `CrocMark` is.
 - Do prefix a plain `<img src>` or `srcSet` with `process.env.NEXT_PUBLIC_BASE_PATH`; Next does not do it outside its own components.
@@ -347,6 +339,6 @@ Every status badge has a leading icon (`data-icon="inline-start"`) and a text la
 
 _Team decisions are recorded here as undated entries; each one is a rule, its reason, and its source._
 
-### Brand-field panels are the page's calls to action
+### The hero is type, not a picture
 
-Brand-field panels are the page's calls to action: the hero opens the page and the closing banner ends it, full width on bg-brand-field with rounded-3xl. Content sections stay in a Card. Source: DESIGN.md:330.
+The hero is type on the page background, with no panel and no image: the walkthrough below is what the page shows, so nothing competes with it above the fold. Content sections stay in a Card. Source: DESIGN.md:268.
