@@ -6,6 +6,7 @@ import { Tabs as TabsPrimitive } from "radix-ui";
 
 // Stock shadcn tabs, kept on this repository's scales: no arbitrary values, and
 // the active tab separates with a ring instead of a shadow (DESIGN.md has none).
+// Vertical lists are a sidebar: no track, rows that wrap, the active row muted.
 function Tabs({
   className,
   ...props
@@ -27,7 +28,7 @@ function TabsList({
     <TabsPrimitive.List
       data-slot="tabs-list"
       className={cn(
-        "inline-flex h-9 w-fit max-w-full items-center rounded-lg bg-muted p-1 text-muted-foreground",
+        "inline-flex h-9 w-fit max-w-full items-center rounded-lg bg-muted p-1 text-muted-foreground data-[orientation=vertical]:h-auto data-[orientation=vertical]:w-full data-[orientation=vertical]:flex-col data-[orientation=vertical]:items-stretch data-[orientation=vertical]:gap-1 data-[orientation=vertical]:bg-transparent data-[orientation=vertical]:p-0",
         className,
       )}
       {...props}
@@ -43,7 +44,7 @@ function TabsTrigger({
     <TabsPrimitive.Trigger
       data-slot="tabs-trigger"
       className={cn(
-        "inline-flex h-full flex-1 items-center justify-center gap-1.5 rounded-md px-2 text-xs font-medium whitespace-nowrap text-muted-foreground transition-all outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:ring-1 data-[state=active]:ring-foreground/10 sm:px-2.5 sm:text-sm [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        "inline-flex h-full flex-1 items-center justify-center gap-1.5 rounded-md px-2 text-xs font-medium whitespace-nowrap text-muted-foreground transition-all outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 data-[orientation=vertical]:h-auto data-[orientation=vertical]:justify-start data-[orientation=vertical]:gap-2 data-[orientation=vertical]:py-1.5 data-[orientation=vertical]:text-left data-[orientation=vertical]:whitespace-normal data-[orientation=vertical]:hover:bg-muted data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:ring-1 data-[state=active]:ring-foreground/10 data-[orientation=vertical]:data-[state=active]:bg-muted data-[orientation=vertical]:data-[state=active]:ring-0 sm:px-2.5 sm:text-sm [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         className,
       )}
       {...props}

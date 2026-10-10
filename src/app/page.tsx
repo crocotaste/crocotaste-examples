@@ -1,14 +1,13 @@
-import {
-  ArrowUpRight,
-  CircleAlert,
-  CircleCheck,
-  CircleX,
-  MessageCircle,
-  NotebookPen,
-  Settings2,
-} from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 
 import { CrocMark } from "@/components/croc-mark";
+import {
+  CodeBlock,
+  DiffView,
+  OutcomeBadge,
+  Message,
+} from "@/components/evidence";
+import { ExampleExplorer } from "@/components/example-explorer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,225 +17,21 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { cn } from "@/lib/utils";
 import {
-  CHECKS,
-  CHECKS_SECTION,
+  ANATOMY,
   EVIDENCE,
-  FIRST_STAGE,
   HERO,
+  HOW_IT_WORKS,
   REPO_URL,
   siteUrl,
-  STAGES,
   STEPS,
-  stepUrl,
   TRY_IT,
-  WALKTHROUGH,
-  type Diff,
-  type Outcome,
-  type Post,
-  type Step,
 } from "@/data/showcase";
 
-const OUTCOME = {
-  setup: { label: "Setup", variant: "secondary", Icon: Settings2 },
-  pass: { label: "Pass", variant: "success", Icon: CircleCheck },
-  drift: { label: "Drift", variant: "warning", Icon: CircleAlert },
-  violation: { label: "Violation", variant: "destructive", Icon: CircleX },
-  command: { label: "Command", variant: "secondary", Icon: MessageCircle },
-  decision: { label: "Decision", variant: "secondary", Icon: NotebookPen },
-} as const;
-
-const SIGN = {
-  "+": { label: EVIDENCE.added, className: "" },
-  "-": { label: EVIDENCE.removed, className: "opacity-70" },
-  " ": { label: EVIDENCE.unchanged, className: "opacity-70" },
-} as const;
-
-function OutcomeBadge({ outcome }: { outcome: Outcome }) {
-  const { label, variant, Icon } = OUTCOME[outcome];
-  return (
-    <Badge variant={variant}>
-      <Icon data-icon="inline-start" />
-      {label}
-    </Badge>
-  );
-}
-
-// Backticks in a message become code spans, the way GitHub renders them.
-function MessageText({ text }: { text: string }) {
-  return (
-    <>
-      {text.split("`").map((part, i) =>
-        i % 2 === 1 ? (
-          <code key={i} className="rounded bg-muted px-1 font-mono text-xs">
-            {part}
-          </code>
-        ) : (
-          part
-        ),
-      )}
-    </>
-  );
-}
-
-function Message({ text }: { text: string }) {
-  return (
-    <p className="break-words whitespace-pre-line">
-      <MessageText text={text} />
-    </p>
-  );
-}
-
-// Code scrolls inside its own block and prose wraps, so nothing ever pushes
-// the page sideways on a narrow screen.
-function CodeBlock({ text, wrap }: { text: string; wrap?: boolean }) {
-  return (
-    <pre
-      className={
-        wrap
-          ? "rounded-md bg-muted px-4 py-2 font-mono text-xs break-words whitespace-pre-wrap"
-          : "overflow-x-auto rounded-md bg-muted px-4 py-2 font-mono text-xs"
-      }
-    >
-      {text}
-    </pre>
-  );
-}
-
-function DiffView({ diff }: { diff: Diff }) {
-  return (
-    <>
-      <div className="border-b bg-muted px-4 py-2 font-mono text-xs break-all text-muted-foreground">
-        {diff.path}
-      </div>
-      <pre
-        className={
-          diff.wrap
-            ? "bg-foreground px-4 py-2 font-mono text-xs text-background"
-            : "overflow-x-auto bg-foreground px-4 py-2 font-mono text-xs text-background"
-        }
-      >
-        {diff.lines.map((line, i) => (
-          <span key={i} className={cn("flex gap-2", SIGN[line.sign].className)}>
-            <span aria-hidden="true">{line.sign}</span>
-            <span className="sr-only">{SIGN[line.sign].label}: </span>
-            <span
-              className={
-                diff.wrap ? "min-w-0 break-words whitespace-pre-wrap" : ""
-              }
-            >
-              {line.text}
-            </span>
-          </span>
-        ))}
-      </pre>
-    </>
-  );
-}
-
-function PostView({ post }: { post: Post }) {
-  if (post.kind === "finding") {
-    return (
-      <div className="space-y-2 p-4">
-        <p className="text-xs text-muted-foreground">
-          <span className="font-medium text-foreground">{EVIDENCE.bot}</span>{" "}
-          {EVIDENCE.onTheLine}
-        </p>
-        <p className="break-words">
-          <OutcomeBadge outcome={post.verdict} />{" "}
-          <MessageText text={post.message} />
-        </p>
-        <p className="text-xs text-muted-foreground">
-          {EVIDENCE.source}{" "}
-          <code className="font-mono break-all">{post.source}</code>
-        </p>
-        {post.suggestion ? (
-          <div className="space-y-1">
-            <p className="text-xs font-medium text-muted-foreground">
-              {EVIDENCE.suggestion}
-            </p>
-            <CodeBlock text={post.suggestion} />
-          </div>
-        ) : null}
-      </div>
-    );
-  }
-  return (
-    <div className="space-y-2 p-4">
-      <p className="text-xs text-muted-foreground">
-        <span className="font-medium text-foreground">{post.author}</span>{" "}
-        {post.action}
-      </p>
-      <Message text={post.text} />
-      {post.block ? (
-        <div className="space-y-1">
-          {post.block.label ? (
-            <p className="text-xs font-medium text-muted-foreground">
-              {post.block.label}
-            </p>
-          ) : null}
-          <CodeBlock text={post.block.text} wrap />
-        </div>
-      ) : null}
-    </div>
-  );
-}
-
-function Evidence({ step }: { step: Step }) {
-  return (
-    <div className="min-w-0 overflow-hidden rounded-lg border">
-      {step.diff ? <DiffView diff={step.diff} /> : null}
-      {step.posts.map((post, i) => (
-        <div key={i}>
-          {i > 0 ? <Separator /> : null}
-          <PostView post={post} />
-        </div>
-      ))}
-    </div>
-  );
-}
-
-// The GitHub link sits under the title from `sm:` and after the evidence
-// below it, where it would otherwise split the title from what it shows.
-function StepLink({ step }: { step: Step }) {
-  const kind = step.issue ? "Issue" : "Pull request";
-  return (
-    <Button asChild variant="outline" size="sm">
-      <a
-        href={stepUrl(step)}
-        aria-label={`${WALKTHROUGH.link}: ${kind} #${step.number}`}
-      >
-        {WALKTHROUGH.link} #{step.number}
-        <ArrowUpRight data-icon="inline-end" />
-      </a>
-    </Button>
-  );
-}
-
-// Stacked on phones, a row from `sm:` (DESIGN.md's walkthrough row): the text
-// takes a third, the evidence the rest.
-function StepItem({ step }: { step: Step }) {
-  return (
-    <article className="flex flex-col gap-2 py-3 sm:flex-row sm:gap-3">
-      <div className="flex min-w-0 flex-col items-start gap-2 sm:w-1/3">
-        <OutcomeBadge outcome={step.outcome} />
-        <h3 className="font-medium">{step.title}</h3>
-        <p className="text-sm text-muted-foreground">{step.shows}</p>
-        <div className="hidden sm:block">
-          <StepLink step={step} />
-        </div>
-      </div>
-      <div className="min-w-0 sm:flex-1">
-        <Evidence step={step} />
-      </div>
-      <div className="sm:hidden">
-        <StepLink step={step} />
-      </div>
-    </article>
-  );
+// The numbers that tie the anatomy's finding to its legend. Decorative: the
+// legend beside it says the same thing in words.
+function Marker({ n }: { n: number }) {
+  return <Badge aria-hidden="true">{n}</Badge>;
 }
 
 function Header() {
@@ -260,24 +55,24 @@ function Header() {
   );
 }
 
-// Type only, on the page's own background: the walkthrough is the picture.
-// The tally under the actions is counted from STEPS, so it never drifts.
+// Type only, centered on the page's own background, and short enough that
+// the first example starts above the fold. The tally is counted from STEPS.
 function Hero() {
   const pullRequests = STEPS.filter((step) => !step.issue).length;
   const findings = STEPS.filter((step) =>
     step.posts.some((post) => post.kind === "finding"),
   ).length;
   return (
-    <section className="px-6 pt-12 pb-8 md:px-10 md:pt-20 md:pb-12">
+    <section className="flex flex-col items-center px-6 pt-6 pb-4 text-center md:pt-10 md:pb-6">
       <h1 className="max-w-3xl text-4xl font-semibold tracking-tight text-balance md:text-5xl">
         {HERO.lead} <span className="text-primary">{HERO.highlight}</span>
       </h1>
-      <p className="mt-4 max-w-2xl text-lg text-muted-foreground">
+      <p className="mt-4 max-w-2xl text-lg text-balance text-muted-foreground">
         {HERO.body}
       </p>
-      <div className="mt-8 flex flex-wrap gap-2">
+      <div className="mt-6 flex flex-wrap justify-center gap-2">
         <Button asChild size="lg">
-          <a href="#walkthrough">{HERO.primary}</a>
+          <a href="#examples">{HERO.primary}</a>
         </Button>
         <Button asChild size="lg" variant="outline">
           <a href={siteUrl()}>
@@ -286,7 +81,7 @@ function Hero() {
           </a>
         </Button>
       </div>
-      <p className="mt-10 font-mono text-xs text-muted-foreground">
+      <p className="mt-4 font-mono text-xs text-muted-foreground">
         {STEPS.length} steps · {pullRequests} pull requests · {findings} reviews
         with findings
       </p>
@@ -294,62 +89,95 @@ function Hero() {
   );
 }
 
-function Checks() {
+function HowItWorks() {
   return (
     <Card>
       <CardHeader>
         <CardTitle>
-          <h2>{CHECKS_SECTION.title}</h2>
+          <h2>{HOW_IT_WORKS.title}</h2>
         </CardTitle>
-        <CardDescription>{CHECKS_SECTION.description}</CardDescription>
+        <CardDescription>{HOW_IT_WORKS.description}</CardDescription>
       </CardHeader>
-      <CardContent className="grid gap-4 md:grid-cols-3">
-        {CHECKS.map((check) => (
-          <div key={check.title} className="rounded-lg bg-muted p-4">
-            <h3 className="font-medium">{check.title}</h3>
-            <p className="mt-1 text-sm text-muted-foreground">{check.body}</p>
-          </div>
-        ))}
+      <CardContent>
+        <ol className="grid gap-4 md:grid-cols-3">
+          {HOW_IT_WORKS.steps.map((step, i) => (
+            <li key={step.title} className="rounded-lg bg-muted p-4">
+              <Marker n={i + 1} />
+              <h3 className="mt-2 font-medium">{step.title}</h3>
+              <p className="mt-1 text-muted-foreground">{step.body}</p>
+            </li>
+          ))}
+        </ol>
       </CardContent>
     </Card>
   );
 }
 
-// One tab per stage, so a phone scrolls through one stage at a time.
-function Walkthrough() {
+// One real finding taken apart: the numbers in its gutter match the legend.
+function Anatomy() {
+  const step = STEPS.find((s) => s.number === ANATOMY.example);
+  const finding = step?.posts.find((post) => post.kind === "finding");
+  if (!step?.diff || finding?.kind !== "finding") return null;
   return (
-    <Card id="walkthrough" className="scroll-mt-4">
+    <Card>
       <CardHeader>
         <CardTitle>
-          <h2>{WALKTHROUGH.title}</h2>
+          <h2>{ANATOMY.title}</h2>
         </CardTitle>
-        <CardDescription>{WALKTHROUGH.description}</CardDescription>
+        <CardDescription>{ANATOMY.description}</CardDescription>
       </CardHeader>
-      <CardContent>
-        <Tabs defaultValue={FIRST_STAGE}>
-          <TabsList aria-label={WALKTHROUGH.tabsLabel}>
-            {STAGES.map((stage) => (
-              <TabsTrigger key={stage.id} value={stage.id}>
-                {stage.label}
-              </TabsTrigger>
+      <CardContent className="grid gap-6 md:grid-cols-2 md:items-center">
+        <div className="min-w-0 overflow-hidden rounded-lg border">
+          <DiffView diff={step.diff} />
+          <div className="space-y-3 p-4">
+            <p className="text-xs text-muted-foreground">
+              <span className="font-medium text-foreground">
+                {EVIDENCE.bot}
+              </span>{" "}
+              {EVIDENCE.onTheLine}
+            </p>
+            <div className="flex items-start gap-3">
+              <Marker n={1} />
+              <OutcomeBadge outcome={finding.verdict} />
+            </div>
+            <div className="flex items-start gap-3">
+              <Marker n={2} />
+              <Message text={finding.message} />
+            </div>
+            <div className="flex items-start gap-3">
+              <Marker n={3} />
+              <p className="min-w-0 text-xs text-muted-foreground">
+                {EVIDENCE.source}{" "}
+                <code className="font-mono break-all">{finding.source}</code>
+              </p>
+            </div>
+            {finding.suggestion ? (
+              <div className="flex items-start gap-3">
+                <Marker n={4} />
+                <div className="min-w-0 flex-1 space-y-1">
+                  <p className="text-xs font-medium text-muted-foreground">
+                    {EVIDENCE.suggestion}
+                  </p>
+                  <CodeBlock text={finding.suggestion} />
+                </div>
+              </div>
+            ) : null}
+          </div>
+        </div>
+        <div className="space-y-4">
+          <ol className="space-y-4">
+            {ANATOMY.parts.map((part, i) => (
+              <li key={part.title} className="flex gap-3">
+                <Marker n={i + 1} />
+                <div>
+                  <h3 className="font-medium">{part.title}</h3>
+                  <p className="mt-1 text-muted-foreground">{part.body}</p>
+                </div>
+              </li>
             ))}
-          </TabsList>
-          {STAGES.map((stage) => (
-            <TabsContent key={stage.id} value={stage.id}>
-              <p className="text-muted-foreground">{stage.description}</p>
-              <ol>
-                {STEPS.filter((step) => step.stage === stage.id).map(
-                  (step, i) => (
-                    <li key={step.number}>
-                      {i > 0 ? <Separator /> : null}
-                      <StepItem step={step} />
-                    </li>
-                  ),
-                )}
-              </ol>
-            </TabsContent>
-          ))}
-        </Tabs>
+          </ol>
+          <p className="text-muted-foreground">{ANATOMY.footnote}</p>
+        </div>
       </CardContent>
     </Card>
   );
@@ -388,8 +216,9 @@ export default function Home() {
       <Header />
       <main className="space-y-4">
         <Hero />
-        <Checks />
-        <Walkthrough />
+        <HowItWorks />
+        <ExampleExplorer />
+        <Anatomy />
         <TryIt />
       </main>
       <footer className="py-6 text-center text-sm text-muted-foreground">

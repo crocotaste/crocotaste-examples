@@ -33,6 +33,9 @@ export type Post =
       block?: { label?: string; text: string };
     };
 
+// The Crocotaste check run on the pull request's head, its title verbatim.
+export type Check = { conclusion: "success" | "neutral"; title: string };
+
 export type Step = {
   stage: StageId;
   title: string;
@@ -41,7 +44,10 @@ export type Step = {
   // Issues and pull requests share one counter: the onboarding issue is #1,
   // the DESIGN.md pull request #2, and each example follows in this order.
   number: number;
+  // The issue or pull request's own title on GitHub, verbatim.
+  githubTitle: string;
   issue?: true;
+  check?: Check;
   diff?: Diff;
   posts: Post[];
 };
@@ -54,39 +60,66 @@ export function siteUrl(path = "/"): string {
 }
 
 export const HERO = {
-  lead: "Watch a design review happen on",
+  lead: "Watch Crocotaste review",
   highlight: "real pull requests",
-  body: "A small Next.js app on shadcn/ui and Tailwind. Every step below shows the change and exactly what Crocotaste posted on it.",
-  primary: "Follow the walkthrough",
+  body: "A small Next.js app on shadcn/ui and Tailwind. Each example shows the change, and exactly what Crocotaste posted on it.",
+  primary: "Browse the examples",
   secondary: "Visit crocotaste.com",
 };
 
-export const CHECKS_SECTION = {
-  title: "What gets checked",
-  description: "Everything is read from this repository, nothing from ours",
-};
+export const HOW_IT_WORKS = {
+  title: "How Crocotaste works",
+  description: "A GitHub App, with no CI step to write and no package to add",
+  steps: [
+    {
+      title: "Install the GitHub App",
+      body: "It opens one issue, and your coding agent turns it into the DESIGN.md every review reads.",
+    },
+    {
+      title: "Open a pull request",
+      body: "Each UI change is read against your tokens, your components and your team's decisions.",
+    },
+    {
+      title: "Read the review",
+      body: "Findings land on the changed line, each citing its source, most with a one-click fix.",
+    },
+  ],
+} as const;
 
-export const CHECKS = [
-  {
-    title: "Your tokens",
-    body: "Every color, radius and size in a diff is read against the shadcn theme in globals.css and the tokens in DESIGN.md.",
-  },
-  {
-    title: "Your components",
-    body: "Markup that rebuilds a Button or a Card from components/ui gets flagged, citing the file it should have used.",
-  },
-  {
-    title: "Your team's decisions",
-    body: "Rules and decisions in DESIGN.md are read at the base of each pull request and cited by file and line.",
-  },
-] as const;
+// The finding the anatomy dissects, one of the steps below.
+export const ANATOMY = {
+  title: "How to read a finding",
+  description: "The value, the token, then the source, in that order",
+  example: 7,
+  parts: [
+    {
+      title: "The verdict",
+      body: "A violation breaks a rule and leaves the check neutral. Drift is a near miss, and the check stays green.",
+    },
+    {
+      title: "The value and the token",
+      body: "What the changed line wrote, then the token your theme already has for it.",
+    },
+    {
+      title: "The source",
+      body: "The file and line in this repository the rule comes from. A finding with no source is deleted before it's posted.",
+    },
+    {
+      title: "The fix",
+      body: "A suggested change you can commit from the pull request in one click.",
+    },
+  ],
+  footnote: "The check is never red, and it never blocks a merge.",
+} as const;
 
-export const WALKTHROUGH = {
-  title: "The walkthrough",
-  description:
-    "From install to a green check. Each step quotes what Crocotaste posted, unedited.",
+export const EXAMPLES = {
+  title: "The examples",
+  description: "From install to a green check, every post quoted unedited",
+  navLabel: "Examples",
   link: "See it on GitHub",
-  tabsLabel: "Walkthrough stages",
+  previous: "Previous",
+  next: "Next",
+  of: "of",
 };
 
 // The labels around each quoted post, in GitHub's own words where it has them.
@@ -98,37 +131,22 @@ export const EVIDENCE = {
   added: "Added",
   removed: "Removed",
   unchanged: "Unchanged",
+  issue: "Issue",
+  pullRequest: "Pull request",
+  check: "Crocotaste check",
+  success: "Success",
+  neutral: "Neutral",
 };
 
-export const STAGES: { id: StageId; label: string; description: string }[] = [
-  {
-    id: "setup",
-    label: "Setup",
-    description:
-      "Install the app, and your coding agent writes the DESIGN.md every review reads.",
-  },
-  {
-    id: "catches",
-    label: "Catches",
-    description:
-      "Off-system UI, flagged on the line that changed and cited to the file it breaks.",
-  },
-  {
-    id: "decisions",
-    label: "Decisions",
-    description:
-      "Dismiss a finding with a reason, record it, and every later review holds to it.",
-  },
-  {
-    id: "clean",
-    label: "Clean",
-    description:
-      "An on-system change gets a green check and an approval, and nothing else.",
-  },
+export const STAGES: { id: StageId; label: string }[] = [
+  { id: "setup", label: "Setup" },
+  { id: "catches", label: "Catches" },
+  { id: "decisions", label: "Decisions" },
+  { id: "clean", label: "Clean" },
 ];
 
-// The tab the walkthrough opens on: what Crocotaste catches is why anyone is here.
-export const FIRST_STAGE: StageId = "catches";
+// The example the page opens on: what Crocotaste catches is why anyone is here.
+export const FIRST_STEP = 3;
 
 export const TRY_IT = {
   title: "Try it on your own repository",
@@ -146,6 +164,7 @@ export const STEPS: Step[] = [
       "Crocotaste opens one issue, with instructions your coding agent can follow.",
     outcome: "setup",
     number: 1,
+    githubTitle: "Generate your DESIGN.md",
     issue: true,
     posts: [
       {
@@ -166,6 +185,8 @@ export const STEPS: Step[] = [
     shows: "The agent's pull request, and what Crocotaste read once it merged.",
     outcome: "setup",
     number: 2,
+    githubTitle: "Added DESIGN.md file",
+    check: { conclusion: "neutral", title: "Skipped · no UI files changed" },
     diff: {
       path: "DESIGN.md",
       wrap: true,
@@ -194,6 +215,11 @@ export const STEPS: Step[] = [
     shows: "text-red-600 is the theme's destructive red, written raw.",
     outcome: "violation",
     number: 3,
+    githubTitle: "Explain what each verdict does to the check",
+    check: {
+      conclusion: "neutral",
+      title: "1 finding · 1 violation · 0 drift",
+    },
     diff: {
       path: "src/app/page.tsx:183",
       lines: [
@@ -225,6 +251,11 @@ export const STEPS: Step[] = [
     shows: "White is six tokens here, so it names them all and guesses none.",
     outcome: "violation",
     number: 4,
+    githubTitle: "Say who posted the reviews under the hero",
+    check: {
+      conclusion: "neutral",
+      title: "1 finding · 1 violation · 0 drift",
+    },
     diff: {
       path: "src/app/page.tsx:122",
       lines: [
@@ -251,6 +282,11 @@ export const STEPS: Step[] = [
     shows: "A near miss is drift: it is named, and the check stays green.",
     outcome: "drift",
     number: 5,
+    githubTitle: "Give the check tiles more room",
+    check: {
+      conclusion: "success",
+      title: "1 finding · 0 violations · 1 drift",
+    },
     diff: {
       path: "src/app/page.tsx:139",
       lines: [
@@ -280,6 +316,11 @@ export const STEPS: Step[] = [
     shows: "The nearest step on the radius scale, as a one-click fix.",
     outcome: "drift",
     number: 6,
+    githubTitle: "Soften the corners of the sample finding",
+    check: {
+      conclusion: "success",
+      title: "1 finding · 0 violations · 1 drift",
+    },
     diff: {
       path: "src/app/page.tsx:161",
       lines: [
@@ -310,6 +351,11 @@ export const STEPS: Step[] = [
     shows: "A misspelled var() that would silently render nothing.",
     outcome: "violation",
     number: 7,
+    githubTitle: "Colour text selection with the brand green",
+    check: {
+      conclusion: "neutral",
+      title: "1 finding · 1 violation · 0 drift",
+    },
     diff: {
       path: "src/app/globals.css:142",
       lines: [
@@ -335,6 +381,11 @@ export const STEPS: Step[] = [
       "Every class is on-system, so the AI review catches it, citing the rule.",
     outcome: "violation",
     number: 8,
+    githubTitle: "Link the DESIGN.md standard from the try-it card",
+    check: {
+      conclusion: "neutral",
+      title: "1 finding · 1 violation · 0 drift",
+    },
     diff: {
       path: "src/app/page.tsx:251",
       lines: [
@@ -364,6 +415,12 @@ export const STEPS: Step[] = [
       "A reply with @crocotaste ignore dismisses it and drafts the decision to record.",
     outcome: "command",
     number: 9,
+    githubTitle: "Close the page with a call to action on the brand field",
+    check: {
+      conclusion: "success",
+      title:
+        "On-system · 1 file · 125 tokens · 30 components · 0 decisions · 0 violations",
+    },
     diff: {
       path: "src/app/page.tsx:229",
       lines: [
@@ -406,6 +463,9 @@ export const STEPS: Step[] = [
       "The drafted block merged into DESIGN.md, where every review reads it.",
     outcome: "decision",
     number: 10,
+    githubTitle:
+      "Record decision: brand-field panels are the page's calls to action",
+    check: { conclusion: "neutral", title: "Skipped · no UI files changed" },
     diff: {
       path: "DESIGN.md",
       wrap: true,
@@ -437,6 +497,11 @@ export const STEPS: Step[] = [
       "No general rule forbids this panel. The decision does, and the finding cites it.",
     outcome: "violation",
     number: 11,
+    githubTitle: "Add an install call to action halfway down the page",
+    check: {
+      conclusion: "neutral",
+      title: "1 finding · 1 violation · 0 drift",
+    },
     diff: {
       path: "src/app/page.tsx:189",
       lines: [
@@ -464,6 +529,12 @@ export const STEPS: Step[] = [
     shows: "Nothing off-system, so the check goes green and it approves.",
     outcome: "pass",
     number: 12,
+    githubTitle: "Move the walkthrough description into the page copy",
+    check: {
+      conclusion: "success",
+      title:
+        "On-system · 1 file · 125 tokens · 30 components · 1 decisions · 0 violations",
+    },
     diff: {
       path: "src/app/page.tsx",
       lines: [
@@ -483,18 +554,16 @@ export const STEPS: Step[] = [
       {
         kind: "comment",
         author: "crocotaste",
-        action: "check passed",
-        text: "On-system · 1 file · 125 tokens · 30 components · 1 decisions · 0 violations\nEvery UI change is on-system.",
-      },
-      {
-        kind: "comment",
-        author: "crocotaste",
         action: "approved these changes",
         text: "Nothing to snap at.",
       },
     ],
   },
 ];
+
+export function stepId(step: Step): string {
+  return `example-${step.number}`;
+}
 
 export function stepUrl(step: Step): string {
   return `${REPO_URL}/${step.issue ? "issues" : "pull"}/${step.number}`;

@@ -2,9 +2,9 @@
 
 A small Next.js app on shadcn/ui and Tailwind, reviewed by [Crocotaste](https://www.crocotaste.com/?utm_source=crocotaste-examples&utm_medium=readme) on every pull request. Each pull request here shows one thing Crocotaste catches, and everything on it (the summary, the inline findings, the check, the replies) is exactly what Crocotaste posted. Nothing was edited after the fact.
 
-**See the app and the walkthrough live: [crocotaste.github.io/crocotaste-examples](https://crocotaste.github.io/crocotaste-examples/)**
+**See the app and the examples live: [crocotaste.github.io/crocotaste-examples](https://crocotaste.github.io/crocotaste-examples/)**
 
-The live page shows every step inline, grouped in four tabs (Setup, Catches, Decisions, Clean): the lines that changed, and what Crocotaste posted on them, quoted verbatim. Each step links to its issue or pull request for the full thread.
+The live page opens with how Crocotaste works, then lays the twelve steps out the way GitHub does, grouped by stage (Setup, Catches, Decisions, Clean): the pull request's title, the lines that changed, what Crocotaste posted on them and the check it left, all quoted verbatim. Each step has its own link (`#example-3`) and links to its issue or pull request for the full thread. Below them, one finding is taken apart piece by piece.
 
 ## What Crocotaste is
 
