@@ -19,14 +19,24 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { cn } from "@/lib/utils";
 import {
   CHECKS,
-  FINDING,
+  CHECKS_SECTION,
+  FIRST_STAGE,
+  HERO,
   REPO_URL,
   siteUrl,
+  STAGES,
   STEPS,
   stepUrl,
+  TRY_IT,
+  WALKTHROUGH,
+  type Diff,
   type Outcome,
+  type Post,
+  type Step,
 } from "@/data/showcase";
 
 const OUTCOME = {
@@ -36,6 +46,12 @@ const OUTCOME = {
   violation: { label: "Violation", variant: "destructive", Icon: CircleX },
   command: { label: "Command", variant: "secondary", Icon: MessageCircle },
   decision: { label: "Decision", variant: "secondary", Icon: NotebookPen },
+} as const;
+
+const SIGN = {
+  "+": { label: "Added", className: "" },
+  "-": { label: "Removed", className: "opacity-70" },
+  " ": { label: "Unchanged", className: "opacity-70" },
 } as const;
 
 function OutcomeBadge({ outcome }: { outcome: Outcome }) {
@@ -49,7 +65,7 @@ function OutcomeBadge({ outcome }: { outcome: Outcome }) {
 }
 
 // Backticks in a message become code spans, the way GitHub renders them.
-function Message({ text }: { text: string }) {
+function MessageText({ text }: { text: string }) {
   return (
     <>
       {text.split("`").map((part, i) =>
@@ -62,6 +78,160 @@ function Message({ text }: { text: string }) {
         ),
       )}
     </>
+  );
+}
+
+function Message({ text }: { text: string }) {
+  return (
+    <p className="break-words whitespace-pre-line">
+      <MessageText text={text} />
+    </p>
+  );
+}
+
+// Code scrolls inside its own block and prose wraps, so nothing ever pushes
+// the page sideways on a narrow screen.
+function CodeBlock({ text, wrap }: { text: string; wrap?: boolean }) {
+  return (
+    <pre
+      className={
+        wrap
+          ? "rounded-md bg-muted px-4 py-2 font-mono text-xs break-words whitespace-pre-wrap"
+          : "overflow-x-auto rounded-md bg-muted px-4 py-2 font-mono text-xs"
+      }
+    >
+      {text}
+    </pre>
+  );
+}
+
+function DiffView({ diff }: { diff: Diff }) {
+  return (
+    <>
+      <div className="border-b bg-muted px-4 py-2 font-mono text-xs break-all text-muted-foreground">
+        {diff.path}
+      </div>
+      <pre
+        className={
+          diff.wrap
+            ? "bg-foreground px-4 py-2 font-mono text-xs text-background"
+            : "overflow-x-auto bg-foreground px-4 py-2 font-mono text-xs text-background"
+        }
+      >
+        {diff.lines.map((line, i) => (
+          <span key={i} className={cn("flex gap-2", SIGN[line.sign].className)}>
+            <span aria-hidden="true">{line.sign}</span>
+            <span className="sr-only">{SIGN[line.sign].label}: </span>
+            <span
+              className={
+                diff.wrap ? "min-w-0 break-words whitespace-pre-wrap" : ""
+              }
+            >
+              {line.text}
+            </span>
+          </span>
+        ))}
+      </pre>
+    </>
+  );
+}
+
+function PostView({ post }: { post: Post }) {
+  if (post.kind === "finding") {
+    return (
+      <div className="space-y-2 p-4">
+        <p className="text-xs text-muted-foreground">
+          <span className="font-medium text-foreground">crocotaste</span>{" "}
+          commented on the line
+        </p>
+        <p className="break-words">
+          <OutcomeBadge outcome={post.verdict} />{" "}
+          <MessageText text={post.message} />
+        </p>
+        <p className="text-xs text-muted-foreground">
+          Source: <code className="font-mono break-all">{post.source}</code>
+        </p>
+        {post.suggestion ? (
+          <div className="space-y-1">
+            <p className="text-xs font-medium text-muted-foreground">
+              Suggested change
+            </p>
+            <CodeBlock text={post.suggestion} />
+          </div>
+        ) : null}
+      </div>
+    );
+  }
+  return (
+    <div className="space-y-2 p-4">
+      <p className="text-xs text-muted-foreground">
+        <span className="font-medium text-foreground">{post.author}</span>{" "}
+        {post.action}
+      </p>
+      <Message text={post.text} />
+      {post.block ? (
+        <div className="space-y-1">
+          {post.block.label ? (
+            <p className="text-xs font-medium text-muted-foreground">
+              {post.block.label}
+            </p>
+          ) : null}
+          <CodeBlock text={post.block.text} wrap />
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+function Evidence({ step }: { step: Step }) {
+  return (
+    <div className="min-w-0 overflow-hidden rounded-lg border">
+      {step.diff ? <DiffView diff={step.diff} /> : null}
+      {step.posts.map((post, i) => (
+        <div key={i}>
+          {i > 0 ? <Separator /> : null}
+          <PostView post={post} />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// The GitHub link sits under the title on wide screens and after the evidence
+// on narrow ones, where it would otherwise split the title from what it shows.
+function StepLink({ step }: { step: Step }) {
+  const kind = step.issue ? "Issue" : "Pull request";
+  return (
+    <Button asChild variant="outline" size="sm">
+      <a
+        href={stepUrl(step)}
+        aria-label={`${WALKTHROUGH.link}: ${kind} #${step.number}`}
+      >
+        {WALKTHROUGH.link} #{step.number}
+        <ArrowUpRight data-icon="inline-end" />
+      </a>
+    </Button>
+  );
+}
+
+function StepItem({ step }: { step: Step }) {
+  return (
+    <article className="grid gap-3 py-4 lg:grid-cols-3 lg:gap-6">
+      <div className="flex min-w-0 flex-col items-start gap-2">
+        <OutcomeBadge outcome={step.outcome} />
+        <h3 className="font-medium">{step.title}</h3>
+        <p className="text-sm text-muted-foreground">{step.shows}</p>
+        <div className="hidden lg:block">
+          <StepLink step={step} />
+        </div>
+      </div>
+      <div className="min-w-0 lg:col-span-2">
+        <Evidence step={step} />
+      </div>
+      <div className="lg:hidden">
+        <StepLink step={step} />
+      </div>
+    </article>
   );
 }
 
@@ -96,20 +266,18 @@ function Hero() {
   return (
     <section className="px-6 pt-12 pb-8 md:px-10 md:pt-20 md:pb-12">
       <h1 className="max-w-3xl text-4xl font-semibold tracking-tight text-balance md:text-5xl">
-        Watch a design review happen on{" "}
-        <span className="text-primary">real pull requests</span>
+        {HERO.lead} <span className="text-primary">{HERO.highlight}</span>
       </h1>
       <p className="mt-4 max-w-2xl text-lg text-muted-foreground">
-        A small Next.js app on shadcn/ui and Tailwind. Each pull request here
-        shows one thing Crocotaste catches, and exactly what it posts.
+        {HERO.body}
       </p>
       <div className="mt-8 flex flex-wrap gap-2">
         <Button asChild size="lg">
-          <a href="#walkthrough">Follow the walkthrough</a>
+          <a href="#walkthrough">{HERO.primary}</a>
         </Button>
         <Button asChild size="lg" variant="outline">
           <a href={siteUrl()}>
-            Visit crocotaste.com
+            {HERO.secondary}
             <ArrowUpRight data-icon="inline-end" />
           </a>
         </Button>
@@ -126,10 +294,10 @@ function Checks() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>What gets checked</CardTitle>
-        <CardDescription>
-          Everything is read from this repository, nothing from ours
-        </CardDescription>
+        <CardTitle>
+          <h2>{CHECKS_SECTION.title}</h2>
+        </CardTitle>
+        <CardDescription>{CHECKS_SECTION.description}</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4 md:grid-cols-3">
         {CHECKS.map((check) => (
@@ -143,76 +311,41 @@ function Checks() {
   );
 }
 
-function Finding() {
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>How a finding reads</CardTitle>
-        <CardDescription>
-          The value, the token, then the source, on the line that changed
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="overflow-hidden rounded-lg border">
-          <div className="border-b bg-muted px-4 py-2 font-mono text-xs text-muted-foreground">
-            {FINDING.path}:{FINDING.line}
-          </div>
-          <pre className="overflow-x-auto bg-foreground px-4 py-2 font-mono text-xs text-background">
-            <span className="block opacity-70">- {FINDING.removed}</span>
-            <span className="block">+ {FINDING.added}</span>
-          </pre>
-          <div className="space-y-3 p-4">
-            <div className="flex flex-wrap items-center gap-2 text-sm">
-              <OutcomeBadge outcome="violation" />
-              <p>
-                <Message text={FINDING.message} />
-              </p>
-            </div>
-            <pre className="overflow-x-auto rounded-md bg-muted px-4 py-2 font-mono text-xs">
-              {FINDING.suggestion}
-            </pre>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
-
+// One tab per stage, so a phone scrolls through one stage at a time.
 function Walkthrough() {
   return (
     <Card id="walkthrough" className="scroll-mt-4">
       <CardHeader>
-        <CardTitle>The walkthrough</CardTitle>
-        <CardDescription>
-          From install to a green check, one pull request at a time
-        </CardDescription>
+        <CardTitle>
+          <h2>{WALKTHROUGH.title}</h2>
+        </CardTitle>
+        <CardDescription>{WALKTHROUGH.description}</CardDescription>
       </CardHeader>
       <CardContent>
-        <ol>
-          {STEPS.map((step, i) => (
-            <li key={step.title}>
-              {i > 0 ? <Separator /> : null}
-              <div className="flex flex-col gap-2 py-3 sm:flex-row sm:items-center sm:gap-3">
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm font-medium">{step.title}</p>
-                  <p className="text-sm text-muted-foreground">{step.shows}</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <OutcomeBadge outcome={step.outcome} />
-                  <Button asChild variant="outline" size="sm">
-                    <a
-                      href={stepUrl(step)}
-                      aria-label={`${step.issue ? "Issue" : "Pull request"} #${step.number}`}
-                    >
-                      #{step.number}
-                      <ArrowUpRight data-icon="inline-end" />
-                    </a>
-                  </Button>
-                </div>
-              </div>
-            </li>
+        <Tabs defaultValue={FIRST_STAGE}>
+          <TabsList aria-label="Walkthrough stages">
+            {STAGES.map((stage) => (
+              <TabsTrigger key={stage.id} value={stage.id}>
+                {stage.label}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+          {STAGES.map((stage) => (
+            <TabsContent key={stage.id} value={stage.id}>
+              <p className="text-muted-foreground">{stage.description}</p>
+              <ol>
+                {STEPS.filter((step) => step.stage === stage.id).map(
+                  (step, i) => (
+                    <li key={step.number}>
+                      {i > 0 ? <Separator /> : null}
+                      <StepItem step={step} />
+                    </li>
+                  ),
+                )}
+              </ol>
+            </TabsContent>
           ))}
-        </ol>
+        </Tabs>
       </CardContent>
     </Card>
   );
@@ -222,21 +355,21 @@ function TryIt() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Try it on your own repository</CardTitle>
-        <CardDescription>
-          Install the GitHub App, and your first three reviews are free
-        </CardDescription>
+        <CardTitle>
+          <h2>{TRY_IT.title}</h2>
+        </CardTitle>
+        <CardDescription>{TRY_IT.description}</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-wrap gap-2">
         <Button asChild size="lg">
           <a href={siteUrl("/docs")}>
-            Get started
+            {TRY_IT.primary}
             <ArrowUpRight data-icon="inline-end" />
           </a>
         </Button>
         <Button asChild size="lg" variant="outline">
           <a href={siteUrl("/pricing")}>
-            See pricing
+            {TRY_IT.secondary}
             <ArrowUpRight data-icon="inline-end" />
           </a>
         </Button>
@@ -252,7 +385,6 @@ export default function Home() {
       <main className="space-y-4">
         <Hero />
         <Checks />
-        <Finding />
         <Walkthrough />
         <TryIt />
       </main>
