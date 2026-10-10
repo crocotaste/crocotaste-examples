@@ -29,10 +29,6 @@ import {
   type Outcome,
 } from "@/data/showcase";
 
-// GitHub Pages serves the site under the repository's name; a plain <img>
-// does not get Next's basePath on its own.
-const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
-
 const OUTCOME = {
   setup: { label: "Setup", variant: "secondary", Icon: Settings2 },
   pass: { label: "Pass", variant: "success", Icon: CircleCheck },
@@ -90,37 +86,38 @@ function Header() {
   );
 }
 
+// Type only, on the page's own background: the walkthrough is the picture.
+// The tally under the actions is counted from STEPS, so it never drifts.
 function Hero() {
+  const pullRequests = STEPS.filter((step) => !step.issue).length;
+  const findings = STEPS.filter(
+    (step) => step.outcome === "violation" || step.outcome === "drift",
+  ).length;
   return (
-    <section className="relative isolate overflow-hidden rounded-3xl bg-brand-field">
-      {/* eslint-disable-next-line @next/next/no-img-element -- static art, no optimizer */}
-      <img
-        src={`${BASE}/hero-pond-1800.webp`}
-        srcSet={`${BASE}/hero-pond-1200.webp 1200w, ${BASE}/hero-pond-1800.webp 1800w, ${BASE}/hero-pond-2200.webp 2200w`}
-        sizes="(min-width: 768px) 1400px, 700px"
-        alt=""
-        className="absolute inset-0 -z-10 size-full object-cover object-left lg:object-center"
-      />
-      <div className="max-w-2xl px-6 py-16 md:px-10">
-        <h1 className="text-4xl font-semibold tracking-tight text-balance text-brand-field-foreground md:text-5xl">
-          Watch a design review happen on real pull requests
-        </h1>
-        <p className="mt-4 text-lg text-brand-field-foreground/90">
-          A small Next.js app on shadcn/ui and Tailwind. Each pull request here
-          shows one thing Crocotaste catches, and exactly what it posts.
-        </p>
-        <div className="mt-8 flex flex-wrap gap-2">
-          <Button asChild size="lg">
-            <a href="#walkthrough">Follow the walkthrough</a>
-          </Button>
-          <Button asChild size="lg" variant="secondary">
-            <a href={siteUrl()}>
-              Visit crocotaste.com
-              <ArrowUpRight data-icon="inline-end" />
-            </a>
-          </Button>
-        </div>
+    <section className="px-6 pt-12 pb-8 md:px-10 md:pt-20 md:pb-12">
+      <h1 className="max-w-3xl text-4xl font-semibold tracking-tight text-balance md:text-5xl">
+        Watch a design review happen on{" "}
+        <span className="text-primary">real pull requests</span>
+      </h1>
+      <p className="mt-4 max-w-2xl text-lg text-muted-foreground">
+        A small Next.js app on shadcn/ui and Tailwind. Each pull request here
+        shows one thing Crocotaste catches, and exactly what it posts.
+      </p>
+      <div className="mt-8 flex flex-wrap gap-2">
+        <Button asChild size="lg">
+          <a href="#walkthrough">Follow the walkthrough</a>
+        </Button>
+        <Button asChild size="lg" variant="outline">
+          <a href={siteUrl()}>
+            Visit crocotaste.com
+            <ArrowUpRight data-icon="inline-end" />
+          </a>
+        </Button>
       </div>
+      <p className="mt-10 font-mono text-xs text-muted-foreground">
+        {STEPS.length} steps · {pullRequests} pull requests · {findings} reviews
+        with findings
+      </p>
     </section>
   );
 }
