@@ -16,7 +16,8 @@ An example project for [Crocotaste](https://www.crocotaste.com): a single-page N
 - `src/app/page.tsx`: the page
 - `src/components/ui/`: shadcn components, added with `npx shadcn@latest add <name>`
 - `src/components/croc-mark.tsx`: the logo mark, drawn from `src/app/icon.svg`
-- `src/data/showcase.ts`: the page's copy; `STAGES`, the walkthrough's tabs; and `STEPS`, the ordered list the walkthrough renders. Each step has its stage, its fixed issue or pull request number, an optional `diff` (the changed lines) and `posts` (findings and comments), quoted verbatim from GitHub and trimmed to the lines that matter. Re-fetch them with `gh pr view <n> --json comments,reviews` and `gh api repos/crocotaste/crocotaste-examples/pulls/<n>/comments` if a review is re-run
+- `src/components/evidence.tsx`: one quoted issue or pull request (title, diff, posts, check row) and `OutcomeBadge`; `src/components/example-explorer.tsx`: the examples card, a client component whose open step lives in the URL hash (`#example-3`)
+- `src/data/showcase.ts`: the page's copy; `STAGES`, the sidebar's groups; and `STEPS`, the ordered list the examples render. Each step has its stage, its fixed issue or pull request number, its `githubTitle`, its Crocotaste `check` (conclusion and title), an optional `diff` (the changed lines) and `posts` (findings and comments), quoted verbatim from GitHub and trimmed to the lines that matter. Re-fetch them with `gh pr view <n> --json comments,reviews` and `gh api repos/crocotaste/crocotaste-examples/pulls/<n>/comments` if a review is re-run, and the check with `gh api repos/crocotaste/crocotaste-examples/commits/<sha>/check-runs`
 - `src/lib/utils.ts`: `cn`
 
 ## Commands
