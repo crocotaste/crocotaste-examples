@@ -4,13 +4,15 @@ A small Next.js app on shadcn/ui and Tailwind, reviewed by [Crocotaste](https://
 
 **See the app and the walkthrough live: [crocotaste.github.io/crocotaste-examples](https://crocotaste.github.io/crocotaste-examples/)**
 
+The live page shows every step inline, grouped in four tabs (Setup, Catches, Decisions, Clean): the lines that changed, and what Crocotaste posted on them, quoted verbatim. Each step links to its issue or pull request for the full thread.
+
 ## What Crocotaste is
 
 AI design reviews. Crocotaste checks every UI change against your design system: your tokens, your components, and your team's decisions. It's a GitHub App: there's no CI step to write and no package to add.
 
 It reads three things from the repository it reviews:
 
-- **Your tokens.** The colours, radii and sizes declared in your stylesheets (here, the shadcn theme in [`src/app/globals.css`](src/app/globals.css)) and in DESIGN.md.
+- **Your tokens.** The colors, radii and sizes declared in your stylesheets (here, the shadcn theme in [`src/app/globals.css`](src/app/globals.css)) and in DESIGN.md.
 - **Your components.** What's in `components/` and `ui/` (here, [`src/components/ui/`](src/components/ui)), so a hand-rolled button can be pointed at the `Button` it should have used.
 - **Your team's decisions.** The rules in [DESIGN.md](https://www.crocotaste.com/design-md?utm_source=crocotaste-examples&utm_medium=readme), plus the design and UI rules your coding agents already follow in `CLAUDE.md`, `AGENTS.md` or Cursor rules.
 
@@ -27,20 +29,20 @@ Follow the walkthrough below in order, and on each pull request look at four pla
 
 ### The walkthrough
 
-| Step                                         | What to look for                                                                                     | Link                                                             |
-| -------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| The onboarding issue                         | One issue with instructions for your coding agent to write DESIGN.md                                 | [#1](https://github.com/crocotaste/crocotaste-examples/issues/1) |
-| Adding DESIGN.md                             | The agent's pull request, and the note on what Crocotaste read once it merged                        | [#2](https://github.com/crocotaste/crocotaste-examples/pull/2)   |
-| A Tailwind colour where a theme token exists | `text-red-600` flagged as `--color-destructive`, with the one-click fix                              | [#3](https://github.com/crocotaste/crocotaste-examples/pull/3)   |
-| A hex that several roles share               | A white that is `--card`, `--popover` and more, named with all of them and no guess                  | [#4](https://github.com/crocotaste/crocotaste-examples/pull/4)   |
-| A spacing value just off the scale           | `p-[18px]` reported as drift against `spacing.card` in DESIGN.md; the check stays green              | [#5](https://github.com/crocotaste/crocotaste-examples/pull/5)   |
-| A radius off the scale                       | `rounded-[12px]` reported as drift, with `rounded-lg` as the one-click fix                           | [#6](https://github.com/crocotaste/crocotaste-examples/pull/6)   |
-| A token that does not exist                  | `var(--primay)` caught in a stylesheet, with `--primary` as the fix                                  | [#7](https://github.com/crocotaste/crocotaste-examples/pull/7)   |
-| A button built from scratch                  | A hand-styled link where `Button` exists, flagged by the AI review with the DESIGN.md rule it breaks | [#8](https://github.com/crocotaste/crocotaste-examples/pull/8)   |
-| Dismissing a finding                         | An `@crocotaste ignore` reply that drafts the decision to record, and the summary's Dismissed row    | [#9](https://github.com/crocotaste/crocotaste-examples/pull/9)   |
-| Recording the decision                       | The drafted block merged into DESIGN.md's `## Decisions`                                             | [#10](https://github.com/crocotaste/crocotaste-examples/pull/10) |
-| Breaking the recorded decision               | A later change goes against it, and the finding cites the decision's line                            | [#11](https://github.com/crocotaste/crocotaste-examples/pull/11) |
-| A clean pull request                         | A green check and an approval: "Nothing to snap at."                                                 | [#12](https://github.com/crocotaste/crocotaste-examples/pull/12) |
+| Step                                        | What to look for                                                                                     | Link                                                             |
+| ------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| The onboarding issue                        | One issue with instructions for your coding agent to write DESIGN.md                                 | [#1](https://github.com/crocotaste/crocotaste-examples/issues/1) |
+| Adding DESIGN.md                            | The agent's pull request, and the note on what Crocotaste read once it merged                        | [#2](https://github.com/crocotaste/crocotaste-examples/pull/2)   |
+| A Tailwind color where a theme token exists | `text-red-600` flagged as `--color-destructive`, with the one-click fix                              | [#3](https://github.com/crocotaste/crocotaste-examples/pull/3)   |
+| A hex that several roles share              | A white that is `--card`, `--popover` and more, named with all of them and no guess                  | [#4](https://github.com/crocotaste/crocotaste-examples/pull/4)   |
+| A spacing value just off the scale          | `p-[18px]` reported as drift against `spacing.card` in DESIGN.md; the check stays green              | [#5](https://github.com/crocotaste/crocotaste-examples/pull/5)   |
+| A radius off the scale                      | `rounded-[12px]` reported as drift, with `rounded-lg` as the one-click fix                           | [#6](https://github.com/crocotaste/crocotaste-examples/pull/6)   |
+| A token that does not exist                 | `var(--primay)` caught in a stylesheet, with `--primary` as the fix                                  | [#7](https://github.com/crocotaste/crocotaste-examples/pull/7)   |
+| A button built from scratch                 | A hand-styled link where `Button` exists, flagged by the AI review with the DESIGN.md rule it breaks | [#8](https://github.com/crocotaste/crocotaste-examples/pull/8)   |
+| Dismissing a finding                        | An `@crocotaste ignore` reply that drafts the decision to record, and the summary's Dismissed row    | [#9](https://github.com/crocotaste/crocotaste-examples/pull/9)   |
+| Recording the decision                      | The drafted block merged into DESIGN.md's `## Decisions`                                             | [#10](https://github.com/crocotaste/crocotaste-examples/pull/10) |
+| Breaking the recorded decision              | A later change goes against it, and the finding cites the decision's line                            | [#11](https://github.com/crocotaste/crocotaste-examples/pull/11) |
+| A clean pull request                        | A green check and an approval: "Nothing to snap at."                                                 | [#12](https://github.com/crocotaste/crocotaste-examples/pull/12) |
 
 DESIGN.md (#2) and the recorded decision (#10) are merged, because every later review reads them. Every other pull request stays open, so each review sits beside the code it read and `main` stays on-system.
 
@@ -55,7 +57,7 @@ Below the message: the source line, a one-line suggestion, and a collapsed **Pro
 There are two verdicts:
 
 - **Violation.** A value that is exactly one of your tokens written raw, a component of yours rebuilt by hand, or a written rule broken. The check turns neutral.
-- **Drift.** A near miss: a colour close to a token, a spacing value just off the scale. The check stays green.
+- **Drift.** A near miss: a color close to a token, a spacing value just off the scale. The check stays green.
 
 ## Talking to it
 
@@ -90,7 +92,7 @@ The site is a static export. Every push to `main` builds it and publishes it to 
 The design system lives in three places:
 
 - `src/app/globals.css`: the shadcn theme, light and dark
-- `src/components/ui/`: the shadcn components (`Button`, `Badge`, `Card`, `Separator`)
+- `src/components/ui/`: the shadcn components (`Button`, `Badge`, `Card`, `Separator`, `Tabs`)
 - `CLAUDE.md`: the rules this project's coding agents follow, which Crocotaste reads as conventions
 
 Want to see it on your own changes? Fork this repository, install Crocotaste on the fork, and open a pull request there. The croc will find something to snap at, or approve it.

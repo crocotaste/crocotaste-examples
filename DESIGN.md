@@ -205,11 +205,11 @@ components:
 
 ## Overview
 
-A one-page Next.js App Router site, exported statically and served from GitHub Pages under `/crocotaste-examples`. It is built from stock shadcn/ui (`radix-nova` style, `neutral` base colour, CSS variables on) with a green theme. The design system lives in four places, and every value in this file was copied from them:
+A one-page Next.js App Router site, exported statically and served from GitHub Pages under `/crocotaste-examples`. It is built from stock shadcn/ui (`radix-nova` style, `neutral` base color, CSS variables on) with a green theme. The design system lives in four places, and every value in this file was copied from them:
 
-- `src/app/globals.css`: every colour and radius token. Light values sit in `:root`, dark values in `.dark`, and `@theme inline` maps each `--x` to a Tailwind `--color-x` (so `--primary` becomes `bg-primary`). `--radius-*` is derived from `--radius: 0.625rem`.
+- `src/app/globals.css`: every color and radius token. Light values sit in `:root`, dark values in `.dark`, and `@theme inline` maps each `--x` to a Tailwind `--color-x` (so `--primary` becomes `bg-primary`). `--radius-*` is derived from `--radius: 0.625rem`.
 - `src/app/layout.tsx`: the font. Outfit from `next/font/google`, exposed as `--font-sans`; `globals.css` also points `--font-heading` at it.
-- `src/components/ui/`: the four components, `button.tsx`, `badge.tsx`, `card.tsx`, `separator.tsx`, with their variants in `cva` calls. `src/components/croc-mark.tsx` is the logo mark.
+- `src/components/ui/`: the five components, `button.tsx`, `badge.tsx`, `card.tsx`, `separator.tsx`, `tabs.tsx`; the button and badge variants are `cva` calls. `src/components/croc-mark.tsx` is the logo mark.
 - `CLAUDE.md`: the written UI rules. `components.json` holds the shadcn configuration.
 
 The type sizes, the spacing unit (`--spacing: 0.25rem`), the mono font stack and the container widths are not defined by this repository: they are Tailwind 4's defaults from `node_modules/tailwindcss/theme.css`, recorded here where the page uses them.
@@ -218,15 +218,15 @@ The type sizes, the spacing unit (`--spacing: 0.25rem`), the mono font stack and
 
 ## Colors
 
-Colours are `oklch()` values, and every one is reached through a Tailwind utility named after its role (`bg-card`, `text-muted-foreground`). The front matter lists the light value under the role name and the dark value under `<role>-dark`; the `-dark` component entries show which values the `.dark` block swaps in.
+Colors are `oklch()` values, and every one is reached through a Tailwind utility named after its role (`bg-card`, `text-muted-foreground`). The front matter lists the light value under the role name and the dark value under `<role>-dark`; the `-dark` component entries show which values the `.dark` block swaps in.
 
-- **Background / foreground:** the page (`body` applies `bg-background text-foreground`). The finding diff inverts them: `bg-foreground text-background`.
+- **Background / foreground:** the page (`body` applies `bg-background text-foreground`). Each step's diff inverts them: `bg-foreground text-background`.
 - **Card / card-foreground:** the surface of every `Card`, white on the faintly green page.
 - **Primary / primary-foreground:** the one brand green. Default `Button`, the `CrocMark` in the header (`text-primary`), the footer link, and `--ring`.
 - **Secondary:** secondary `Button` and the `setup` and `command` `Badge`s.
-- **Muted / muted-foreground:** quiet fills and supporting text: the check tiles (`bg-muted`), code spans, the file-path bar of the finding, `CardDescription`, step descriptions, the footer.
-- **Success, warning, destructive:** status only. They appear on the page solely through the `success`, `warning` and `destructive` `Badge` variants, at `/10` opacity for the fill (`/20` in dark) with the full token as text. `--success` has the same value as `--primary` in both modes.
-- **Border:** `* { @apply border-border outline-ring/50 }` sets the default border colour for every element, and `Separator` is `bg-border`.
+- **Muted / muted-foreground:** quiet fills and supporting text: the check tiles (`bg-muted`), the tab list, code spans and code blocks, the file-path bar above each diff, `CardDescription`, step descriptions, the footer.
+- **Success, warning, destructive:** status only. They appear on the page through the `success`, `warning` and `destructive` `Badge` variants, at `/10` opacity for the fill (`/20` in dark) with the full token as text. Each quoted finding opens with its verdict as an `OutcomeBadge`, the way the step it belongs to is labelled. `--success` has the same value as `--primary` in both modes.
+- **Border:** `* { @apply border-border outline-ring/50 }` sets the default border color for every element, and `Separator` is `bg-border`.
 - **Ring and input** (not in the front matter, because the code reads them only at partial opacity): `--ring` is `oklch(0.528 0.115 161.878)` light and `oklch(0.773 0.153 163.223)` dark, the same values as `--primary`, and every focus ring is `ring-ring/50`. `--input` is `oklch(0.928 0.008 157.082)` light and `oklch(1 0 0 / 15%)` dark; only the dark `outline` `Button` reads it (`dark:border-input dark:bg-input/30`).
 
 **Dark mode.** `@custom-variant dark (&:is(.dark *))` makes `dark:` utilities apply under a `.dark` ancestor, and the `.dark` block in `globals.css` redefines every token above. Nothing in the app adds the `.dark` class, and there is no theme toggle or `prefers-color-scheme` rule, so the page always renders the light values. A component that reads theme tokens needs no extra `dark:` classes to be correct in dark mode; the `dark:` classes in `src/components/ui/` only retune opacities.
@@ -243,13 +243,13 @@ Two weights carry hierarchy: `font-semibold` (600) for the h1, card titles and t
 | `display-sm` | `text-4xl font-semibold tracking-tight`          | Hero h1 below `md`                                           |
 | `lead`       | `text-lg`                                        | Hero paragraph                                               |
 | `title`      | `text-lg font-semibold` on `CardTitle`           | Every card title on the page                                 |
-| `heading-sm` | `font-medium` (`text-base`)                      | Check tile `h3`                                              |
+| `heading-sm` | `font-medium` (`text-base`)                      | Check tile and walkthrough step `h3`                         |
 | `body-md`    | `text-sm`                                        | Card body text (`Card` sets `text-sm`), descriptions, footer |
 | `label-md`   | `text-sm font-medium`                            | `Button`, step titles                                        |
-| `label-sm`   | `text-xs font-medium`                            | `Badge`                                                      |
-| `code`       | `font-mono text-xs`                              | Code spans, the finding diff and suggestion                  |
+| `label-sm`   | `text-xs font-medium`                            | `Badge`, tab triggers below `sm`                             |
+| `code`       | `font-mono text-xs`                              | Code spans, each step's diff, suggestions and quoted blocks  |
 
-The h1 also carries `text-balance`. `CardTitle` is `text-lg font-semibold leading-snug` in `card.tsx` itself, so no call site restyles it. There is no separate type-scale token file.
+The h1 also carries `text-balance`. `CardTitle` is `text-lg font-semibold leading-snug` in `card.tsx` itself, so no call site restyles it; it wraps an `h2`, so the headings run h1, h2, h3 in order. There is no separate type-scale token file.
 
 ## Layout
 
@@ -259,6 +259,7 @@ Spacing uses Tailwind's scale on its default `--spacing: 0.25rem`; the repositor
 - **Stack:** `main` separates sections with `space-y-4`. The header and footer use `py-4` and `py-6`.
 - **Card:** padding comes from `--card-spacing`, `--spacing(4)` by default and `--spacing(3)` at `size="sm"`, used as both the vertical padding and the gap between header and content.
 - **Grids and rows:** the check tiles are `grid gap-4 md:grid-cols-3`. Button groups are `flex flex-wrap gap-2`. Walkthrough rows stack (`flex-col gap-2`) and become a row at `sm:` (`sm:flex-row sm:gap-3`), with `Separator` between rows and `py-3` on each.
+- **Walkthrough:** one `Tabs` per stage (`STAGES`), each panel a stage description and an `ol` of steps with `Separator` between them. Each step is a walkthrough row (`flex-col gap-2 py-3`, `sm:flex-row sm:gap-3`): the badge, title, description and GitHub link at `sm:w-1/3`, the evidence in the rest. Below `sm` the link moves after the evidence. Code scrolls inside its block (`overflow-x-auto`) and prose wraps (`whitespace-pre-wrap break-words`), so nothing widens the page at 320px.
 - **Hero:** type on the page background, no panel and no image: `px-6 pt-12 pb-8 md:px-10 md:pt-20 md:pb-12`, the h1 at `max-w-3xl` with its last phrase in `text-primary`, the paragraph `mt-4 max-w-2xl text-muted-foreground`, actions `mt-8`, then a `font-mono text-xs` tally counted from `STEPS` at `mt-10`.
 - **Breakpoints:** Tailwind defaults, used at `sm`, `md` and `lg` only.
 
@@ -267,7 +268,8 @@ Spacing uses Tailwind's scale on its default `--spacing: 0.25rem`; the repositor
 There are no shadows and no shadow tokens: no `shadow-*` class appears in `src/`. Depth comes from surface and outline:
 
 - `Card` separates itself from `bg-background` with `bg-card` and `ring-1 ring-foreground/10`.
-- Nested panels step down a surface instead of up: `bg-muted` tiles inside the card, `rounded-lg border` around the finding.
+- Nested panels step down a surface instead of up: `bg-muted` tiles inside the card, `rounded-lg border` around each step's evidence.
+- The active tab is `bg-card` with `ring-1 ring-foreground/10` on the `bg-muted` tab list, the same ring a `Card` uses.
 
 ## Shapes
 
@@ -275,8 +277,8 @@ Every radius comes from the `rounded-*` scale in `@theme inline`, derived from `
 
 - `rounded-4xl`: `Badge`, a pill.
 - `rounded-xl`: `Card`.
-- `rounded-lg`: `Button` (default and `lg` sizes), check tiles, the finding frame.
-- `rounded-md`: the suggestion `<pre>`; `Button` at `sm` computes to it (`min(var(--radius-md),12px)`).
+- `rounded-lg`: `Button` (default and `lg` sizes), check tiles, the tab list, each step's evidence frame.
+- `rounded-md`: tab triggers, the suggestion and quoted `<pre>` blocks; `Button` at `sm` computes to it (`min(var(--radius-md),12px)`).
 - `rounded`: inline code spans.
 
 Icons are `lucide-react` line icons, sized by the component they sit in: `size-4` in a `Button`, `size-3.5` in a `sm` `Button`, `size-3` in a `Badge`. The `CrocMark` defaults to `size-6` and is filled with `currentColor`.
@@ -289,7 +291,7 @@ Import from `src/components/ui/<name>` by path; there is no barrel file.
 
 - `lg` + `default` for the main call to action (`Follow the walkthrough`, `Get started`), with `outline` beside it (on the hero and in a card).
 - `ghost` for the header's `GitHub` link.
-- `outline` + `sm` for each walkthrough step's `#n` link.
+- `outline` + `sm` for each walkthrough step's `See it on GitHub #n` link.
 - An external link carries a trailing `ArrowUpRight` marked `data-icon="inline-end"`, which tightens the right padding.
 
 States: hover `bg-primary/80` (default), `bg-muted` (outline, ghost), a `color-mix` 5% toward foreground (secondary); pressed `active:translate-y-px`; focus `focus-visible:border-ring ring-3 ring-ring/50`; disabled `opacity-50 pointer-events-none`; invalid `aria-invalid` gives a destructive border and ring. There is no loading state.
@@ -304,33 +306,35 @@ States: hover `bg-primary/80` (default), `bg-muted` (outline, ghost), a `color-m
 | `violation`          | Violation        | `destructive` | `CircleX`                   |
 | `command`            | Command          | `secondary`   | `MessageCircle`             |
 
-Every status badge has a leading icon (`data-icon="inline-start"`) and a text label, so status never rests on colour alone.
+Every status badge has a leading icon (`data-icon="inline-start"`) and a text label, so status never rests on color alone.
 
 **Card** (`card.tsx`). `Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardAction`, `CardContent`, `CardFooter`; sizes `default` and `sm`. Every boxed section below the hero is a `Card` with a `CardHeader` (title plus one-line description) and a `CardContent`.
 
-**Separator** (`separator.tsx`). A 1px `bg-border` rule, decorative by default. It divides walkthrough rows.
+**Separator** (`separator.tsx`). A 1px `bg-border` rule, decorative by default. It divides walkthrough steps and the posts inside a step's evidence.
 
-**CrocMark** (`croc-mark.tsx`). The logo from `src/app/icon.svg` without its field, `aria-hidden`, coloured by the parent's text colour (`text-primary` in the header).
+**Tabs** (`tabs.tsx`). `Tabs`, `TabsList`, `TabsTrigger`, `TabsContent`, on Radix, so arrow keys move between tabs and each panel is labelled by its tab. The walkthrough opens on `FIRST_STAGE`. Triggers are `text-xs` below `sm` and `text-sm` from it, so the four stages fit at 320px; every state comes from tokens (`hover:text-foreground`, `focus-visible:ring-3 ring-ring/50`, active `bg-card` with a ring), with no shadow and no arbitrary value.
+
+**CrocMark** (`croc-mark.tsx`). The logo from `src/app/icon.svg` without its field, `aria-hidden`, colored by the parent's text color (`text-primary` in the header).
 
 ## Do's and Don'ts
 
-- Do take every colour from a theme token utility (`bg-card`, `text-muted-foreground`, `text-destructive`); don't write a raw hex, `rgb()` or `oklch()` value, or a Tailwind palette colour such as `text-red-600`, outside `globals.css`.
-- Do add a new colour role to `:root`, `.dark` and `@theme inline` in `globals.css` in the same change.
+- Do take every color from a theme token utility (`bg-card`, `text-muted-foreground`, `text-destructive`); don't write a raw hex, `rgb()` or `oklch()` value, or a Tailwind palette color such as `text-red-600`, outside `globals.css`.
+- Do add a new color role to `:root`, `.dark` and `@theme inline` in `globals.css` in the same change.
 - Do keep `success`, `warning` and `destructive` for status; don't use them for decoration, and don't tint the `CrocMark` with them.
 - Do show a status as a `Badge` through `OutcomeBadge`, with its lucide icon and its label; don't build a status pill from a `span`.
 - Do use `Button` for every action, and `Button asChild` around an `<a>` for a link styled as a button; don't style a bare `<a>` or `<button>` as a button.
 - Do wrap every boxed section in `Card` with `CardHeader` and `CardContent`; don't draw a box with `border rounded-xl` on a `div` at section level.
-- Do change a shadcn component's look through a variant in its own file under `src/components/ui/`; don't override its colours or radius with classes at the call site.
+- Do change a shadcn component's look through a variant in its own file under `src/components/ui/`; don't override its colors or radius with classes at the call site.
 - Do take radii from the `rounded-*` scale (`rounded-lg`, `rounded-xl`); don't write `rounded-[…]` outside `src/components/ui/`.
 - Do take spacing from Tailwind's scale (`p-4`, `gap-2`, `space-y-4`); don't write `p-[…]`, `gap-[…]` or any arbitrary spacing value.
 - Do separate a surface with `ring-1 ring-foreground/10` or a step to `bg-muted`; don't add `shadow-*`.
 - Do give every interactive element a visible hover and a `focus-visible` ring from `--ring`; the base layer's `outline-ring/50` must stay.
 - Do give every `<img>` an `alt`, empty (`alt=""`) only when the image is decorative.
-- Do give a link or button whose text alone is unclear an `aria-label` (the step links read `Pull request #3`, not `#3`); don't ship an icon-only `Button` without one.
+- Do give a link or button whose text alone is unclear an `aria-label` (the step links read `See it on GitHub: Pull request #3`); don't ship an icon-only `Button` without one.
 - Do mark decorative SVGs `aria-hidden`, as `CrocMark` is.
 - Do prefix a plain `<img src>` or `srcSet` with `process.env.NEXT_PUBLIC_BASE_PATH`; Next does not do it outside its own components.
-- Do write copy in sentence case (`Follow the walkthrough`, `See pricing`); don't use exclamation marks or em dashes. The quoted Crocotaste finding in `src/data/showcase.ts` is the one exception, reproduced verbatim.
-- Do spell out "pull request" in copy, write "colour" with British spelling, and use the verdict words `Pass`, `Drift` and `Violation` as they appear in the badges.
+- Do write copy in sentence case (`Follow the walkthrough`, `See pricing`); don't use exclamation marks or em dashes. The Crocotaste text quoted in `STEPS` (`src/data/showcase.ts`) is the one exception, reproduced verbatim.
+- Do spell out "pull request" in copy, write "color" with US spelling, and use the verdict words `Pass`, `Drift` and `Violation` as they appear in the badges.
 - Do keep page copy in `src/data/showcase.ts`, not inline in `page.tsx`.
 - Do name files in kebab-case with named exports, and import components by path; don't add barrel files.
 - Don't add anything that needs a request (route handlers, server actions, `cookies()`, `headers()`); the site is a static export.
